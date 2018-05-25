@@ -1,0 +1,10 @@
+*.exe
+*.o
+*.d
+*.mk
+*.axf
+*.map
+*.bin
+*.jtag
+*.swp
+*.swo
