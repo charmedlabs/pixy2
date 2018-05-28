@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/config.png</file>
+        <file>icons/play.png</file>
+        <file>icons/stop.png</file>
+        <file>icons/raw.png</file>
+        <file>icons/pixy.png</file>
+        <file>icons/home.png</file>
+        <file>icons/blue.png</file>
+        <file>icons/green.png</file>
+        <file>icons/lt_blue.png</file>
+        <file>icons/orange.png</file>
+        <file>icons/purple.png</file>
+        <file>icons/red.png</file>
+        <file>icons/yellow.png</file>
+    </qresource>
+</RCC>
