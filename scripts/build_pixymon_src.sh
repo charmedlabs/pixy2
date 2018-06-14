@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 TARGET_BUILD_FOLDER=../build
 
 mkdir $TARGET_BUILD_FOLDER
@@ -8,7 +10,6 @@ mkdir $TARGET_BUILD_FOLDER/pixymon/src
 mkdir $TARGET_BUILD_FOLDER/pixymon/src/host
 
 echo "Creating build folder..."
-cp -r ../src/device             $TARGET_BUILD_FOLDER/pixymon
 cp -r ../src/common             $TARGET_BUILD_FOLDER/pixymon/src
 cp -r ../src/host/pixymon       $TARGET_BUILD_FOLDER/pixymon/src/host
 cp ../src/host/buildpixymon.sh  $TARGET_BUILD_FOLDER/pixymon/
