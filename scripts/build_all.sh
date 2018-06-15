@@ -5,6 +5,7 @@
 ##############################################################################################
 
 BUILD_PIXYMON=1
+BUILD_GET_BLOCKS_CPP_DEMO=1
 
 ##############################################################################################
 # SCRIPT START                                                                               #
@@ -40,11 +41,25 @@ if [ $BUILD_PIXYMON == 1 ]; then
   echo "# Building Pixymon...                                                                  #"
   echo "########################################################################################"
   NORMAL_TEXT
-  
+
   SECONDS=0
   PIXYMON_START=$SECONDS
   ./build_pixymon_src.sh
   PIXYMON_END=$SECONDS
+fi
+
+##############################################################################################
+# GET BLOCKS CPP DEMO                                                                        #
+##############################################################################################
+
+if [ $BUILD_GET_BLOCKS_CPP_DEMO == 1 ]; then
+  WHITE_TEXT
+  echo "########################################################################################"
+  echo "# Building Get Blocks CPP Demo...                                                      #"
+  echo "########################################################################################"
+  NORMAL_TEXT
+
+  ./build_get_blocks_cpp_demo.sh
 fi
 
 ##############################################################################################
@@ -65,10 +80,23 @@ if [ $BUILD_PIXYMON == 1 ]; then
     printf "SUCCESS "
   else
     RED_TEXT
-    printf "FAILURE " 
+    printf "FAILURE "
   fi
   WHITE_TEXT
   TIME_DELTA $PIXYMON_START $PIXYMON_END
+  echo ""
+fi
+
+if [ $BUILD_GET_BLOCKS_CPP_DEMO == 1 ]; then
+  WHITE_TEXT
+  printf "# get_blocks_cpp_demo ............................................. "
+  if [ -f ../build/get_blocks_cpp_demo/get_blocks_cpp_demo ]; then
+    GREEN_TEXT
+    printf "SUCCESS "
+  else
+    RED_TEXT
+    printf "FAILURE "
+  fi
   echo ""
 fi
 
