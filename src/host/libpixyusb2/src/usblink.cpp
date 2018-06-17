@@ -154,6 +154,3 @@ uint32_t USBLink::getTimer()
   return time;
 }
 
-
-
-
