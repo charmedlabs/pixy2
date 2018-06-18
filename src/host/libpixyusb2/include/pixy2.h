@@ -18,6 +18,9 @@
 #ifndef __PIXY_H__
 #define __PIXY_H__
 
+#include <stdio.h>
+#include "pixydefs.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -34,8 +37,10 @@ struct Block
     int i, j;
     char sig[6], d;
     bool flag;
-    if (type==PIXY_BLOCKTYPE_COLOR_CODE)
+    if (type > CCC_MAX_SIGNATURE)
     {
+      // Color Code (CC) //
+
       // convert signature number to an octal string
       for (i=12, j=0, flag=false; i>=0; i-=3)
       {
@@ -45,7 +50,7 @@ struct Block
         if (flag)
           sig[j++] = d + '0';
       }
-      sig[j] = '\0';	
+      sig[j] = '\0';
       sprintf(buf, "CC block! sig: %s (%d decimal) x: %d y: %d width: %d height: %d angle %d", sig, signature, x, y, width, height, angle);
     }
     else // regular block.  Note, angle is always zero, so no need to print

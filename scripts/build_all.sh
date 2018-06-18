@@ -6,6 +6,7 @@
 
 BUILD_PIXYMON=1
 BUILD_GET_BLOCKS_CPP_DEMO=1
+BUILD_LIBPIXYUSB2=1
 
 ##############################################################################################
 # SCRIPT START                                                                               #
@@ -49,6 +50,20 @@ if [ $BUILD_PIXYMON == 1 ]; then
 fi
 
 ##############################################################################################
+# LIBPIXYUSB2                                                                                #
+##############################################################################################
+
+if [ $BUILD_LIBPIXYUSB2 == 1 ]; then
+  WHITE_TEXT
+  echo "########################################################################################"
+  echo "# Building libpixyusb2...                                                              #"
+  echo "########################################################################################"
+  NORMAL_TEXT
+
+  ./build_libpixyusb2.sh
+fi
+
+##############################################################################################
 # GET BLOCKS CPP DEMO                                                                        #
 ##############################################################################################
 
@@ -84,6 +99,19 @@ if [ $BUILD_PIXYMON == 1 ]; then
   fi
   WHITE_TEXT
   TIME_DELTA $PIXYMON_START $PIXYMON_END
+  echo ""
+fi
+
+if [ $BUILD_LIBPIXYUSB2 == 1 ]; then
+  WHITE_TEXT
+  printf "# libpixyusb2 ..................................................... "
+  if [ -f ../build/libpixyusb2/libpixy2.a ]; then
+    GREEN_TEXT
+    printf "SUCCESS "
+  else
+    RED_TEXT
+    printf "FAILURE "
+  fi
   echo ""
 fi
 

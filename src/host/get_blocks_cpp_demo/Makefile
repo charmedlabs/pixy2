@@ -1,6 +1,6 @@
 CXX=g++
-CPPFLAGS=-g -fpermissive -I/usr/include/libusb-1.0 -I../libpixyusb2/include
-LDLIBS=../libpixyusb2/src/lib/libpixy2.a -lusb-1.0
+CPPFLAGS=-g -fpermissive -I/usr/include/libusb-1.0 -I../libpixyusb2/include -I../../common/inc
+LDLIBS=../../../build/libpixyusb2/libpixy2.a -lusb-1.0
 
 SRCS=get_blocks_cpp_demo.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
