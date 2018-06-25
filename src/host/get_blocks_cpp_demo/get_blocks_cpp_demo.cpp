@@ -28,23 +28,46 @@ int main()
 {
   int  Result;
 
+  printf ("=============================================================\n");
+  printf ("= PIXY2 Get Blocks Demo                                     =\n");
+  printf ("=============================================================\n");
+
   printf ("Connecting to Pixy2...");
 
-  Result = pixy.init();
-
-  // TODO: SET PROGRAM TO CCC //
-
-  if (Result < 0)
+  // Initialize Pixy2 Connection //
   {
-    printf ("Error\n");
-    printf ("pixy.init() returned %d\n", Result);
-    return Result;
+    Result = pixy.init();
+
+    if (Result < 0)
+    {
+      printf ("Error\n");
+      printf ("pixy.init() returned %d\n", Result);
+      return Result;
+    }
+
+    printf ("Success\n");
   }
 
-  printf ("Success\n");
+  // Get Pixy2 Version information //
+  {
+    Result = pixy.getVersion();
+
+    if (Result < 0)
+    {
+      printf ("pixy.getVersion() returned %d\n", Result);
+      return Result;
+    }
+
+    pixy.version->print();
+  }
+
+  // Set Pixy2 to color connected components program //
+  pixy.changeProg("color_connected_components");
 
   while(1)
   {
     get_blocks();
   }
+
+  // TODO: CLEANUP AFTER SIGINT
 }
