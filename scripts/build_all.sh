@@ -6,6 +6,7 @@
 
 BUILD_PIXYMON=1
 BUILD_GET_BLOCKS_CPP_DEMO=1
+BUILD_GET_LINES_CPP_DEMO=1
 BUILD_LIBPIXYUSB2=1
 
 ##############################################################################################
@@ -60,6 +61,14 @@ if [ $BUILD_GET_BLOCKS_CPP_DEMO == 1 ]; then
 fi
 
 ##############################################################################################
+# GET LINES CPP DEMO                                                                         #
+##############################################################################################
+
+if [ $BUILD_GET_LINES_CPP_DEMO == 1 ]; then
+  ./build_get_lines_cpp_demo.sh
+fi
+
+##############################################################################################
 # BUILD RESULTS                                                                              #
 ##############################################################################################
 
@@ -101,6 +110,19 @@ if [ $BUILD_GET_BLOCKS_CPP_DEMO == 1 ]; then
   WHITE_TEXT
   printf "# get_blocks_cpp_demo ............................................. "
   if [ -f ../build/get_blocks_cpp_demo/get_blocks_cpp_demo ]; then
+    GREEN_TEXT
+    printf "SUCCESS "
+  else
+    RED_TEXT
+    printf "FAILURE "
+  fi
+  echo ""
+fi
+
+if [ $BUILD_GET_LINES_CPP_DEMO == 1 ]; then
+  WHITE_TEXT
+  printf "# get_lines_cpp_demo .............................................. "
+  if [ -f ../build/get_lines_cpp_demo/get_lines_cpp_demo ]; then
     GREEN_TEXT
     printf "SUCCESS "
   else

@@ -32,6 +32,8 @@ int main()
 
   Result = pixy.init();
 
+  // TODO: SET PROGRAM TO CCC //
+
   if (Result < 0)
   {
     printf ("Error\n");
