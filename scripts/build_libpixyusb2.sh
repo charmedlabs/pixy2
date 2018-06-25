@@ -15,7 +15,7 @@ function RED_TEXT {
 
 WHITE_TEXT
 echo "########################################################################################"
-echo "# Building Pixymon...                                                                  #"
+echo "# Building libpixyusb2...                                                              #"
 echo "########################################################################################"
 NORMAL_TEXT
 
@@ -24,22 +24,15 @@ uname -a
 TARGET_BUILD_FOLDER=../build
 
 mkdir $TARGET_BUILD_FOLDER
-mkdir $TARGET_BUILD_FOLDER/pixymon/
-mkdir $TARGET_BUILD_FOLDER/pixymon/src
-mkdir $TARGET_BUILD_FOLDER/pixymon/src/host
-
-echo "Creating build folder..."
-cp -r ../src/common             $TARGET_BUILD_FOLDER/pixymon/src
-cp -r ../src/host/pixymon       $TARGET_BUILD_FOLDER/pixymon/src/host
-cp ../src/host/buildpixymon.sh  $TARGET_BUILD_FOLDER/pixymon/
+mkdir $TARGET_BUILD_FOLDER/libpixyusb2
 
 echo "Starting build..."
-cd $TARGET_BUILD_FOLDER/pixymon
-rm ./PixyMon
-chmod +x buildpixymon.sh
-./buildpixymon.sh
+rm $TARGET_BUILD_FOLDER/libpixyusb/libpixy2.a
+cd ../src/host/libpixyusb2/src
+make
+mv ./lib/libpixy2.a ../../../../build/libpixyusb2
 
-if [ -f ./PixyMon ]; then
+if [ -f ../../../../build/libpixyusb2/libpixy2.a ]; then
   GREEN_TEXT
   printf "SUCCESS "
 else
