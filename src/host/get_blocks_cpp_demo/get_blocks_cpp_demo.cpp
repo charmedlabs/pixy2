@@ -2,35 +2,47 @@
 
 Pixy2 pixy;
 
-void loop()
+void  get_blocks()
 {
+  int  Block_Index;
 
-  int i;
-  // grab blocks!
+  // Query Pixy for blocks //
   pixy.ccc.getBlocks();
 
-  // If there are detect blocks, print them!
+  // Were blocks detected? //
   if (pixy.ccc.numBlocks)
   {
-    printf("Detected %d\n", pixy.ccc.numBlocks);
-    for (i=0; i<pixy.ccc.numBlocks; i++)
+    // Blocks detected - print them! //
+
+    printf ("Detected %d block(s)\n", pixy.ccc.numBlocks);
+
+    for (Block_Index = 0; Block_Index < pixy.ccc.numBlocks; ++Block_Index)
     {
-      printf("  block %d: ", i);
-      pixy.ccc.blocks[i].print();
+      printf ("  Block %d: ", Block_Index + 1);
+      pixy.ccc.blocks[Block_Index].print();
     }
   }
-  pixy.m_link.callChirp("hello");
 }
 
 int main()
 {
-  int res;
-  res = pixy.init();
-  if (res<0)
+  int  Result;
+
+  printf ("Connecting to Pixy2...");
+
+  Result = pixy.init();
+
+  if (Result < 0)
   {
-    printf("unable to open pixy object\n");
-    return 0;
+    printf ("Error\n");
+    printf ("pixy.init() returned %d\n", Result);
+    return Result;
   }
+
+  printf ("Success\n");
+
   while(1)
-    loop();
+  {
+    get_blocks();
+  }
 }
