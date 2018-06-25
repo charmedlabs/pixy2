@@ -1,6 +1,16 @@
+#include <signal.h>
 #include "libpixyusb2.h"
 
-Pixy2 pixy;
+Pixy2        pixy;
+static bool  run_flag = true;
+
+
+void handle_SIGINT(int unused)
+{
+  // On CTRL+C - abort! //
+
+  run_flag = false;
+}
 
 void  get_line_features()
 {
@@ -56,6 +66,9 @@ int main()
 {
   int  Result;
 
+  // Catch CTRL+C (SIGINT) signals //
+  signal (SIGINT, handle_SIGINT);
+
   printf ("=============================================================\n");
   printf ("= PIXY2 Line Features Demo                                  =\n");
   printf ("=============================================================\n");
@@ -95,7 +108,13 @@ int main()
   while(1)
   {
     get_line_features();
+
+    if (run_flag == false)
+    {
+      // Exit program loop //
+      break;
+    }
   }
 
-  // TODO: CLEANUP AFTER SIGINT
+  printf ("PIXY2 Line Features Demo Exit\n");
 }
