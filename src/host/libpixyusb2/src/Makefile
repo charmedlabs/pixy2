@@ -3,7 +3,7 @@ OUT_FILE_NAME = libpixy2.a
 
 CFLAGS= -g -D__LINUX__
 
-INC = -I/usr/include/libusb-1.0 -I../include -I../../../common/inc -I../inc
+INC = -I/usr/include/libusb-1.0 -I../include -I../../../common/inc -I../inc -I../../arduino/libraries/Pixy2
 
 OBJ_DIR=./obj
 
