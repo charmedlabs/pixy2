@@ -15,7 +15,7 @@
 
 
 #include <stdio.h>
-#include "pixy.h"
+#include "pixydefs.h"
 #include "usblink.h"
 #include "debuglog.h"
 #include "util.h"
