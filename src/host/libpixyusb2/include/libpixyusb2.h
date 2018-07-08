@@ -31,16 +31,17 @@
 class Link2USB
 {
 public:
-  Link2USB();
-  ~Link2USB();
+  Link2USB ();
+  ~Link2USB ();
   
-  int8_t open(uint32_t arg);
-  void close();
+  int8_t open (uint32_t arg);
+  void close ();
     
-  int16_t recv(uint8_t *buf, uint8_t len, uint16_t *cs=NULL);
-  int16_t send(uint8_t *buf, uint8_t len);
+  int16_t recv (uint8_t *buf, uint8_t len, uint16_t *cs=NULL);
+  int16_t send (uint8_t *buf, uint8_t len);
   
-  int callChirp(const char *func, ...);
+  int callChirp (const char *func, ...);
+  int callChirp (const char *  func, va_list  args);
   
 private:
   Chirp *m_chirp;

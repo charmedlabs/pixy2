@@ -7,6 +7,7 @@
 BUILD_PIXYMON=1
 BUILD_GET_BLOCKS_CPP_DEMO=1
 BUILD_GET_LINES_CPP_DEMO=1
+BUILD_CHIRP_COMMAND_CPP_DEMO=1
 BUILD_LIBPIXYUSB2=1
 
 ##############################################################################################
@@ -50,6 +51,14 @@ fi
 
 if [ $BUILD_LIBPIXYUSB2 == 1 ]; then
   ./build_libpixyusb2.sh
+fi
+
+##############################################################################################
+# CHIRP COMMAND CPP DEMO                                                                     #
+##############################################################################################
+
+if [ $BUILD_CHIRP_COMMAND_CPP_DEMO == 1 ]; then
+  ./build_chirp_command_cpp_demo.sh
 fi
 
 ##############################################################################################
@@ -97,6 +106,19 @@ if [ $BUILD_LIBPIXYUSB2 == 1 ]; then
   WHITE_TEXT
   printf "# libpixyusb2 ..................................................... "
   if [ -f ../build/libpixyusb2/libpixy2.a ]; then
+    GREEN_TEXT
+    printf "SUCCESS "
+  else
+    RED_TEXT
+    printf "FAILURE "
+  fi
+  echo ""
+fi
+
+if [ $BUILD_CHIRP_COMMAND_CPP_DEMO == 1 ]; then
+  WHITE_TEXT
+  printf "# chirp_command_cpp_demo .......................................... "
+  if [ -f ../build/chirp_command_cpp_demo/chirp_command_cpp_demo ]; then
     GREEN_TEXT
     printf "SUCCESS "
   else

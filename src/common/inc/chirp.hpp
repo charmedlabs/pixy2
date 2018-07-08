@@ -18,6 +18,7 @@
 #define CRP_RES_ERROR_MAX_NAK           -4
 #define CRP_RES_ERROR_MEMORY            -5
 #define CRP_RES_ERROR_NOT_CONNECTED     -6
+#define CRP_RES_ERROR_INVALID_COMMAND   -7
 
 #define CRP_MAX_NAK                     3
 #define CRP_RETRIES                     3

@@ -87,5 +87,38 @@ int16_t Link2USB::send(uint8_t *buf, uint8_t len)
   
 int Link2USB::callChirp(const char *func, ...)
 {
-  return 0;
+  va_list  arguments;
+  int      return_value;
+
+  va_start (arguments, func);
+  return_value = callChirp (func, arguments);
+  va_end (arguments);
+
+  return return_value;
+}
+
+int Link2USB::callChirp (const char *  func, va_list  args)
+{
+  ChirpProc  function_id;
+  int        return_value;
+  va_list    arguments;
+
+  va_copy (arguments, args);
+
+  // Request chirp function id for 'func'. //
+  function_id = m_chirp->getProc (func);
+
+  // Was there an error requesting function id? //
+  if (function_id < 0) {
+    // Request error //
+    va_end (arguments);
+
+    return CRP_RES_ERROR_INVALID_COMMAND;
+  }
+
+  // Execute chirp synchronous remote function call //
+  return_value = m_chirp->call (SYNC, function_id, arguments);
+  va_end (arguments);
+
+  return return_value;
 }

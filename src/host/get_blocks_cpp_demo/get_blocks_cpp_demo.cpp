@@ -89,6 +89,22 @@ int main()
     pixy.version->print();
   }
 
+  {
+    int  chirp_response;
+
+    pixy.m_link.callChirp("led_set", INT32(0xFF00FF), END_OUT_ARGS, &chirp_response, END_IN_ARGS);
+    printf ("led_set = %d\n", chirp_response);
+
+  }
+
+  printf ("run_flag = %d\n", run_flag);
+
+  while(run_flag)
+  {
+    printf ("exit!");
+  }
+  return 0;
+
   // Set Pixy2 to color connected components program //
   pixy.changeProg("color_connected_components");
 
