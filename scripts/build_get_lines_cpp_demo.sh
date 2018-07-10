@@ -27,11 +27,11 @@ mkdir $TARGET_BUILD_FOLDER
 mkdir $TARGET_BUILD_FOLDER/get_lines_cpp_demo
 
 rm $TARGET_BUILD_FOLDER/get_lines_cpp_demo/get_lines_cpp_demo
-cd ../src/host/get_lines_cpp_demo
+cd ../src/host/examples/get_lines_cpp_demo
 make
-mv ./get_lines_cpp_demo ../../../build/get_lines_cpp_demo
+mv ./get_lines_cpp_demo ../../../../build/get_lines_cpp_demo
 
-if [ -f ../../../build/get_lines_cpp_demo/get_lines_cpp_demo ]; then
+if [ -f ../../../../build/get_lines_cpp_demo/get_lines_cpp_demo ]; then
   GREEN_TEXT
   printf "SUCCESS "
 else

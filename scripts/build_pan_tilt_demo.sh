@@ -15,7 +15,7 @@ function RED_TEXT {
 
 WHITE_TEXT
 echo "########################################################################################"
-echo "# Building Pan Tilt Demo...                                                      #"
+echo "# Building Pan Tilt Demo...                                                            #"
 echo "########################################################################################"
 NORMAL_TEXT
 
@@ -27,11 +27,11 @@ mkdir $TARGET_BUILD_FOLDER
 mkdir $TARGET_BUILD_FOLDER/pan_tilt_demo
 
 rm $TARGET_BUILD_FOLDER/pan_tilt_demo/pan_tilt__demo
-cd ../src/host/pan_tilt_demo
+cd ../src/host/examples/pan_tilt_demo
 make
-mv ./pan_tilt_demo ../../../build/pan_tilt_demo
+mv ./pan_tilt_demo ../../../../build/pan_tilt_demo
 
-if [ -f ../../../build/pan_tilt_demo/pan_tilt_demo ]; then
+if [ -f ../../../../build/pan_tilt_demo/pan_tilt_demo ]; then
   GREEN_TEXT
   printf "SUCCESS "
 else

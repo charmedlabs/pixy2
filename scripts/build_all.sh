@@ -8,6 +8,7 @@ BUILD_PIXYMON=1
 BUILD_GET_BLOCKS_CPP_DEMO=1
 BUILD_GET_LINES_CPP_DEMO=1
 BUILD_CHIRP_COMMAND_CPP_DEMO=1
+BUILD_PAN_TILT_CPP_DEMO=1
 BUILD_LIBPIXYUSB2=1
 
 ##############################################################################################
@@ -78,6 +79,14 @@ if [ $BUILD_GET_LINES_CPP_DEMO == 1 ]; then
 fi
 
 ##############################################################################################
+# PAN/TILT CPP DEMO                                                                          #
+##############################################################################################
+
+if [ $BUILD_PAN_TILT_CPP_DEMO == 1 ]; then
+  ./build_pan_tilt_demo.sh
+fi
+
+##############################################################################################
 # BUILD RESULTS                                                                              #
 ##############################################################################################
 
@@ -145,6 +154,19 @@ if [ $BUILD_GET_LINES_CPP_DEMO == 1 ]; then
   WHITE_TEXT
   printf "# get_lines_cpp_demo .............................................. "
   if [ -f ../build/get_lines_cpp_demo/get_lines_cpp_demo ]; then
+    GREEN_TEXT
+    printf "SUCCESS "
+  else
+    RED_TEXT
+    printf "FAILURE "
+  fi
+  echo ""
+fi
+
+if [ $BUILD_PAN_TILT_CPP_DEMO == 1 ]; then
+  WHITE_TEXT
+  printf "# pan_tilt_demo ................................................... "
+  if [ -f ../build/pan_tilt_demo/pan_tilt_demo ]; then
     GREEN_TEXT
     printf "SUCCESS "
   else
