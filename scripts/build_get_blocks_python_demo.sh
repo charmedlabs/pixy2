@@ -31,6 +31,11 @@ cd ../src/host/examples/get_blocks_python_demo
 
 swig -c++ -python pixy.i
 python setup.py build_ext --inplace -D__LINUX__
+
+if [ -f ../../../../build/get_blocks_python_demo/_pixy.so ]; then
+  rm ../../../../build/get_blocks_python_demo/_pixy.so
+fi
+
 cp * ../../../../build/get_blocks_python_demo
 
 if [ -f ../../../../build/get_blocks_python_demo/_pixy.so ]; then
