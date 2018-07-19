@@ -24,21 +24,20 @@ uname -a
 TARGET_BUILD_FOLDER=../build
 
 mkdir $TARGET_BUILD_FOLDER
-mkdir $TARGET_BUILD_FOLDER/get_blocks_python_demo
+mkdir $TARGET_BUILD_FOLDER/python_demos
 
-rm $TARGET_BUILD_FOLDER/get_blocks_python_demo/get_blocks_cpp_demo
-cd ../src/host/examples/get_blocks_python_demo
+cd ../src/host/examples/python_demos
 
 swig -c++ -python pixy.i
 python setup.py build_ext --inplace -D__LINUX__
 
-if [ -f ../../../../build/get_blocks_python_demo/_pixy.so ]; then
-  rm ../../../../build/get_blocks_python_demo/_pixy.so
+if [ -f ../../../../build/python_demos/_pixy.so ]; then
+  rm ../../../../build/python_demos/_pixy.so
 fi
 
-cp * ../../../../build/get_blocks_python_demo
+cp * ../../../../build/python_demos
 
-if [ -f ../../../../build/get_blocks_python_demo/_pixy.so ]; then
+if [ -f ../../../../build/python_demos/_pixy.so ]; then
   GREEN_TEXT
   printf "SUCCESS "
 else

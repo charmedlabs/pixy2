@@ -275,7 +275,7 @@ template <class LinkType> int8_t TPixy2<LinkType>::changeProg(const char *prog)
   // poll for program to change
   while(1)
   {
-    strncpy(m_bufPayload, prog, PIXY_MAX_PROGNAME);
+    strncpy((char *) m_bufPayload, prog, PIXY_MAX_PROGNAME);
     m_length = PIXY_MAX_PROGNAME;
     m_type = PIXY_TYPE_REQUEST_CHANGE_PROG;
     sendPacket();

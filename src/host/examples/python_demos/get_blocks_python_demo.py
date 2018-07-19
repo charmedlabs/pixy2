@@ -6,8 +6,8 @@ from pixy import *
 
 print ("Pixy2 Python SWIG Example -- Get Blocks")
 
-pixy.init()
-pixy.changeProg("color_connected_components");
+pixy.init ()
+pixy.change_prog ("color_connected_components");
 
 class Blocks (Structure):
   _fields_ = [ ("m_signature", c_uint),

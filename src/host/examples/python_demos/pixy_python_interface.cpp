@@ -8,6 +8,11 @@ int init()
   return  pixy_instance.init();
 }
 
+int change_prog (const char *  program_name)
+{
+  return pixy_instance.changeProg (program_name);
+}
+
 int ccc_get_blocks (int  max_blocks, struct Block *  blocks)
 {
   int  number_of_blocks_copied;
@@ -56,7 +61,7 @@ int line_get_vectors (int  max_vectors, struct Vector *  vectors)
   return number_of_vectors_copied;
 }
 
-int line_get_intersections (int  max_intersections, struct Intersection *  intersections)
+int line_get_intersections (int  max_intersections, struct IntersectionLine *  intersections)
 {
   int  number_of_intersections_copied;
   int  intersections_available;

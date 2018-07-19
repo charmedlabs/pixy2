@@ -14,10 +14,18 @@
 
 %array_class(struct Block, BlockArray);
 %array_class(struct Vector, VectorArray);
-%array_class(struct IntersectionLine, IntesectionLineArray);
+%array_class(struct IntersectionLine, IntersectionLineArray);
+%array_class(struct Barcode, BarcodeArray);
 
 %inline %{
 extern int init();
+
+/*!
+  @brief       Select active running program on Pixy
+  @param[in]   program_name  "color_connected_components"  Block detection program
+                             "line"                        Line feature detection program
+*/
+extern int change_prog (const char *  program_name);
 
 /*!
   @brief       Copy 'max_blocks' number of blocks to the address 'blocks'.
@@ -27,13 +35,25 @@ extern int init();
 */
 extern int ccc_get_blocks (int  max_blocks, BlockArray *  blocks);
 
+extern void line_get_all_features ();
+
+extern void line_get_main_features ();
+
 /*!
   @brief       Copy 'max_intersections' number of intersections to the address 'intersections'.
   @param[in]   max_intersections  Maximum number of intersection objects that will be copied.
   @param[out]  intersections      Address to copy the intersection data.
   @return      Number of intersections copied to 'intersections'.
 */
-extern int line_get_intersections (int  max_intersections, struct Intersection *  intersections)
+extern int line_get_intersections (int  max_intersections, IntersectionLineArray *  intersections);
+
+/*!
+  @brief       Copy 'max_vectors' number of vectors to the address 'vectors'.
+  @param[in]   max_vectors        Maximum number of vector objects that will be copied.
+  @param[out]  vectors            Address to copy the vector data.
+  @return      Number of vectors copied to 'vectors'.
+*/
+extern int line_get_vectors (int max_vectors, VectorArray *  vectors);
 
 /*!
   @brief       Copy 'max_barcode' number of barcodes to the address 'barcodes'.
@@ -41,7 +61,7 @@ extern int line_get_intersections (int  max_intersections, struct Intersection *
   @param[out]  barcodes      Address to copy the barcode data.
   @return      Number of barcode objects copied to 'barcodes'.
 */
-extern int line_get_barcodes (int  max_barcodes, struct Barcode *  barcodes)
+extern int line_get_barcodes (int  max_barcodes, BarcodeArray *  barcodes);
 %}
 
 struct Block

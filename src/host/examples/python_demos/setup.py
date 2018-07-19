@@ -12,7 +12,7 @@ pixy_module = Extension('_pixy',
   'usb-1.0'],
   sources =   ['pixy_wrap.cxx',
   '../../../common/src/chirp.cpp',
-  '../../../host/examples/get_blocks_python_demo/pixy_python_interface.cpp',
+  '../../../host/examples/python_demos/pixy_python_interface.cpp',
   '../../../host/libpixyusb2/src/usblink.cpp',
   '../../../host/libpixyusb2/src/util.cpp',
   '../../../host/libpixyusb2/src/libpixyusb2.cpp'])
