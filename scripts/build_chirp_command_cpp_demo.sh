@@ -27,7 +27,7 @@ mkdir $TARGET_BUILD_FOLDER
 mkdir $TARGET_BUILD_FOLDER/chirp_command_cpp_demo
 
 rm $TARGET_BUILD_FOLDER/chirp_command_cpp_demo/chirp_command_cpp_demo
-cd ../src/host/examples/chirp_command_cpp_demo
+cd ../src/host/libpixyusb2_examples/chirp_command_cpp_demo
 make
 mv ./chirp_command_cpp_demo ../../../../build/chirp_command_cpp_demo
 

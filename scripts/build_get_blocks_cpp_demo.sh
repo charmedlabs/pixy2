@@ -27,7 +27,7 @@ mkdir $TARGET_BUILD_FOLDER
 mkdir $TARGET_BUILD_FOLDER/get_blocks_cpp_demo
 
 rm $TARGET_BUILD_FOLDER/get_blocks_cpp_demo/get_blocks_cpp_demo
-cd ../src/host/examples/get_blocks_cpp_demo
+cd ../src/host/libpixyusb2_examples/get_blocks_cpp_demo
 pwd
 make
 mv ./get_blocks_cpp_demo ../../../../build/get_blocks_cpp_demo

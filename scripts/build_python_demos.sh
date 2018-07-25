@@ -26,7 +26,7 @@ TARGET_BUILD_FOLDER=../build
 mkdir $TARGET_BUILD_FOLDER
 mkdir $TARGET_BUILD_FOLDER/python_demos
 
-cd ../src/host/examples/python_demos
+cd ../src/host/libpixyusb2_examples/python_demos
 
 swig -c++ -python pixy.i
 python setup.py build_ext --inplace -D__LINUX__

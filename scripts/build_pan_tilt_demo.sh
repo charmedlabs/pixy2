@@ -27,7 +27,7 @@ mkdir $TARGET_BUILD_FOLDER
 mkdir $TARGET_BUILD_FOLDER/pan_tilt_demo
 
 rm $TARGET_BUILD_FOLDER/pan_tilt_demo/pan_tilt__demo
-cd ../src/host/examples/pan_tilt_demo
+cd ../src/host/libpixyusb2_examples/pan_tilt_demo
 make
 mv ./pan_tilt_demo ../../../../build/pan_tilt_demo
 

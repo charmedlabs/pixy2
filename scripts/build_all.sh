@@ -9,6 +9,7 @@ BUILD_GET_BLOCKS_CPP_DEMO=1
 BUILD_GET_LINES_CPP_DEMO=1
 BUILD_CHIRP_COMMAND_CPP_DEMO=1
 BUILD_PAN_TILT_CPP_DEMO=1
+BUILD_PYTHON_DEMOS=1
 BUILD_LIBPIXYUSB2=1
 
 ##############################################################################################
@@ -52,6 +53,14 @@ fi
 
 if [ $BUILD_LIBPIXYUSB2 == 1 ]; then
   ./build_libpixyusb2.sh
+fi
+
+##############################################################################################
+# PYTHON DEMOS                                                                               #
+##############################################################################################
+
+if [ $BUILD_PYTHON_DEMOS == 1 ]; then
+  ./build_python_demos.sh
 fi
 
 ##############################################################################################
@@ -167,6 +176,19 @@ if [ $BUILD_PAN_TILT_CPP_DEMO == 1 ]; then
   WHITE_TEXT
   printf "# pan_tilt_demo ................................................... "
   if [ -f ../build/pan_tilt_demo/pan_tilt_demo ]; then
+    GREEN_TEXT
+    printf "SUCCESS "
+  else
+    RED_TEXT
+    printf "FAILURE "
+  fi
+  echo ""
+fi
+
+if [ $BUILD_PYTHON_DEMOS == 1 ]; then
+  WHITE_TEXT
+  printf "# python demos .................................................... "
+  if [ -f ../build/python_demos/_pixy.so ]; then
     GREEN_TEXT
     printf "SUCCESS "
   else

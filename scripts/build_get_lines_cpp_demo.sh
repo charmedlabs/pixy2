@@ -27,7 +27,7 @@ mkdir $TARGET_BUILD_FOLDER
 mkdir $TARGET_BUILD_FOLDER/get_lines_cpp_demo
 
 rm $TARGET_BUILD_FOLDER/get_lines_cpp_demo/get_lines_cpp_demo
-cd ../src/host/examples/get_lines_cpp_demo
+cd ../src/host/libpixyusb2_examples/get_lines_cpp_demo
 make
 mv ./get_lines_cpp_demo ../../../../build/get_lines_cpp_demo
 
