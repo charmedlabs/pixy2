@@ -28,7 +28,7 @@ public:
   int8_t open(uint32_t arg)
   {
     SPI.begin();
-    SPI.beginTransaction(SPISettings(PIXY_SPI_CLOCKRATE, MSBFIRST, SPI_MODE1));
+    SPI.beginTransaction(SPISettings(PIXY_SPI_CLOCKRATE, MSBFIRST, SPI_MODE3));
 	return 0;
   }
 	
