@@ -25,7 +25,7 @@
 
 #define FW_MAJOR_VER		      3
 #define FW_MINOR_VER		      0
-#define FW_BUILD_VER		      10
+#define FW_BUILD_VER		      11
 #ifdef LEGO 
 #define FW_TYPE                   "LEGO"
 #else
@@ -140,6 +140,7 @@ uint32_t exec_getUID();
 int32_t exec_getView(const uint16_t &index, Chirp *chirp=NULL);
 int32_t exec_setView(const uint16_t &index);
 int32_t exec_toggleLamp();
+int32_t exec_printMC();
 
 int8_t exec_progIndex();
 void exec_loadParams();

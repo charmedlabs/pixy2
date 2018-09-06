@@ -1100,6 +1100,7 @@ const CamCommand camInitData[] =
 #endif
 
 #if 1
+#if 0
 // [Step4-APGA]
 //[APGA Settings M 85% 2015/05/07 22:24:13]
 	  CAM_REG_WRITE16, 0x3640, 0x0250, // P_G1_P0Q0 - [0:00:08.042]
@@ -1225,6 +1226,131 @@ const CamCommand camInitData[] =
 	  CAM_REG_WRITE16, 0xC97A, 0x7E06, // CAM_PGA_R_CONFIG_GREEN_BLUE_Q14 - [0:00:08.431]
 	  CAM_REG_WRITE16, 0xC97C, 0x7798, // CAM_PGA_R_CONFIG_BLUE_Q14 - [0:00:08.436]
 	  CAM_REG_WRITE16, 0xC95E, 0x0003, // CAM_PGA_PGA_CONTROL - [0:00:08.441]
+#else
+	  CAM_REG_WRITE16, 0x3640, 0x02D0, 	//  P_G1_P0Q0
+	  CAM_REG_WRITE16, 0x3642, 0x30E8, 	//  P_G1_P0Q1
+	  CAM_REG_WRITE16, 0x3644, 0x0A91, 	//  P_G1_P0Q2
+	  CAM_REG_WRITE16, 0x3646, 0xB06B, 	//  P_G1_P0Q3
+	  CAM_REG_WRITE16, 0x3648, 0x0271, 	//  P_G1_P0Q4
+	  CAM_REG_WRITE16, 0x364A, 0x00B0, 	//  P_R_P0Q0
+	  CAM_REG_WRITE16, 0x364C, 0xEF4A, 	//  P_R_P0Q1
+	  CAM_REG_WRITE16, 0x364E, 0x3651, 	//  P_R_P0Q2
+	  CAM_REG_WRITE16, 0x3650, 0xE48B, 	//  P_R_P0Q3
+	  CAM_REG_WRITE16, 0x3652, 0x1331, 	//  P_R_P0Q4
+	  CAM_REG_WRITE16, 0x3654, 0x0150, 	//  P_B_P0Q0
+	  CAM_REG_WRITE16, 0x3656, 0x202C, 	//  P_B_P0Q1
+	  CAM_REG_WRITE16, 0x3658, 0x02F1, 	//  P_B_P0Q2
+	  CAM_REG_WRITE16, 0x365A, 0x904E, 	//  P_B_P0Q3
+	  CAM_REG_WRITE16, 0x365C, 0x7310, 	//  P_B_P0Q4
+	  CAM_REG_WRITE16, 0x365E, 0x00F0, 	//  P_G2_P0Q0
+	  CAM_REG_WRITE16, 0x3660, 0x966A, 	//  P_G2_P0Q1
+	  CAM_REG_WRITE16, 0x3662, 0x1691, 	//  P_G2_P0Q2
+	  CAM_REG_WRITE16, 0x3664, 0x0FEB, 	//  P_G2_P0Q3
+	  CAM_REG_WRITE16, 0x3666, 0x3DB0, 	//  P_G2_P0Q4
+	  CAM_REG_WRITE16, 0x3680, 0x14CB, 	//  P_G1_P1Q0
+	  CAM_REG_WRITE16, 0x3682, 0xB90D, 	//  P_G1_P1Q1
+	  CAM_REG_WRITE16, 0x3684, 0xE8CF, 	//  P_G1_P1Q2
+	  CAM_REG_WRITE16, 0x3686, 0x0A2F, 	//  P_G1_P1Q3
+	  CAM_REG_WRITE16, 0x3688, 0x7090, 	//  P_G1_P1Q4
+	  CAM_REG_WRITE16, 0x368A, 0x0D2B, 	//  P_R_P1Q0
+	  CAM_REG_WRITE16, 0x368C, 0xE7CC, 	//  P_R_P1Q1
+	  CAM_REG_WRITE16, 0x368E, 0xEC2F, 	//  P_R_P1Q2
+	  CAM_REG_WRITE16, 0x3690, 0x01CF, 	//  P_R_P1Q3
+	  CAM_REG_WRITE16, 0x3692, 0x4B10, 	//  P_R_P1Q4
+	  CAM_REG_WRITE16, 0x3694, 0x590C, 	//  P_B_P1Q0
+	  CAM_REG_WRITE16, 0x3696, 0xDA6C, 	//  P_B_P1Q1
+	  CAM_REG_WRITE16, 0x3698, 0x8470, 	//  P_B_P1Q2
+	  CAM_REG_WRITE16, 0x369A, 0x144B, 	//  P_B_P1Q3
+	  CAM_REG_WRITE16, 0x369C, 0x03D0, 	//  P_B_P1Q4
+	  CAM_REG_WRITE16, 0x369E, 0x4DEC, 	//  P_G2_P1Q0
+	  CAM_REG_WRITE16, 0x36A0, 0xA00D, 	//  P_G2_P1Q1
+	  CAM_REG_WRITE16, 0x36A2, 0xB030, 	//  P_G2_P1Q2
+	  CAM_REG_WRITE16, 0x36A4, 0x262E, 	//  P_G2_P1Q3
+	  CAM_REG_WRITE16, 0x36A6, 0x1A70, 	//  P_G2_P1Q4
+	  CAM_REG_WRITE16, 0x36C0, 0x2A31, 	//  P_G1_P2Q0
+	  CAM_REG_WRITE16, 0x36C2, 0x42C8, 	//  P_G1_P2Q1
+	  CAM_REG_WRITE16, 0x36C4, 0x47B2, 	//  P_G1_P2Q2
+	  CAM_REG_WRITE16, 0x36C6, 0x3011, 	//  P_G1_P2Q3
+	  CAM_REG_WRITE16, 0x36C8, 0xEF12, 	//  P_G1_P2Q4
+	  CAM_REG_WRITE16, 0x36CA, 0x4611, 	//  P_R_P2Q0
+	  CAM_REG_WRITE16, 0x36CC, 0x7B4D, 	//  P_R_P2Q1
+	  CAM_REG_WRITE16, 0x36CE, 0x2973, 	//  P_R_P2Q2
+	  CAM_REG_WRITE16, 0x36D0, 0x73F0, 	//  P_R_P2Q3
+	  CAM_REG_WRITE16, 0x36D2, 0xF1B3, 	//  P_R_P2Q4
+	  CAM_REG_WRITE16, 0x36D4, 0x1951, 	//  P_B_P2Q0
+	  CAM_REG_WRITE16, 0x36D6, 0x1C4E, 	//  P_B_P2Q1
+	  CAM_REG_WRITE16, 0x36D8, 0x51B2, 	//  P_B_P2Q2
+	  CAM_REG_WRITE16, 0x36DA, 0x4250, 	//  P_B_P2Q3
+	  CAM_REG_WRITE16, 0x36DC, 0x93B3, 	//  P_B_P2Q4
+	  CAM_REG_WRITE16, 0x36DE, 0x2711, 	//  P_G2_P2Q0
+	  CAM_REG_WRITE16, 0x36E0, 0x366C, 	//  P_G2_P2Q1
+	  CAM_REG_WRITE16, 0x36E2, 0x2B12, 	//  P_G2_P2Q2
+	  CAM_REG_WRITE16, 0x36E4, 0x1111, 	//  P_G2_P2Q3
+	  CAM_REG_WRITE16, 0x36E6, 0xCD12, 	//  P_G2_P2Q4
+	  CAM_REG_WRITE16, 0x3700, 0xA4EF, 	//  P_G1_P3Q0
+	  CAM_REG_WRITE16, 0x3702, 0xA16E, 	//  P_G1_P3Q1
+	  CAM_REG_WRITE16, 0x3704, 0x1C8C, 	//  P_G1_P3Q2
+	  CAM_REG_WRITE16, 0x3706, 0x03EE, 	//  P_G1_P3Q3
+	  CAM_REG_WRITE16, 0x3708, 0xC472, 	//  P_G1_P3Q4
+	  CAM_REG_WRITE16, 0x370A, 0xFBEE, 	//  P_R_P3Q0
+	  CAM_REG_WRITE16, 0x370C, 0xA62F, 	//  P_R_P3Q1
+	  CAM_REG_WRITE16, 0x370E, 0x82D1, 	//  P_R_P3Q2
+	  CAM_REG_WRITE16, 0x3710, 0x06CE, 	//  P_R_P3Q3
+	  CAM_REG_WRITE16, 0x3712, 0xE32F, 	//  P_R_P3Q4
+	  CAM_REG_WRITE16, 0x3714, 0xC42B, 	//  P_B_P3Q0
+	  CAM_REG_WRITE16, 0x3716, 0x8D2E, 	//  P_B_P3Q1
+	  CAM_REG_WRITE16, 0x3718, 0x8891, 	//  P_B_P3Q2
+	  CAM_REG_WRITE16, 0x371A, 0x5DAF, 	//  P_B_P3Q3
+	  CAM_REG_WRITE16, 0x371C, 0x76EE, 	//  P_B_P3Q4
+	  CAM_REG_WRITE16, 0x371E, 0x82EF, 	//  P_G2_P3Q0
+	  CAM_REG_WRITE16, 0x3720, 0x45ED, 	//  P_G2_P3Q1
+	  CAM_REG_WRITE16, 0x3722, 0xABD1, 	//  P_G2_P3Q2
+	  CAM_REG_WRITE16, 0x3724, 0xFFCF, 	//  P_G2_P3Q3
+	  CAM_REG_WRITE16, 0x3726, 0x836F, 	//  P_G2_P3Q4
+	  CAM_REG_WRITE16, 0x3740, 0x7ED0, 	//  P_G1_P4Q0
+	  CAM_REG_WRITE16, 0x3742, 0x2451, 	//  P_G1_P4Q1
+	  CAM_REG_WRITE16, 0x3744, 0xBCCF, 	//  P_G1_P4Q2
+	  CAM_REG_WRITE16, 0x3746, 0xD171, 	//  P_G1_P4Q3
+	  CAM_REG_WRITE16, 0x3748, 0x8934, 	//  P_G1_P4Q4
+	  CAM_REG_WRITE16, 0x374A, 0x52B1, 	//  P_R_P4Q0
+	  CAM_REG_WRITE16, 0x374C, 0x1D90, 	//  P_R_P4Q1
+	  CAM_REG_WRITE16, 0x374E, 0xFCB2, 	//  P_R_P4Q2
+	  CAM_REG_WRITE16, 0x3750, 0x61EF, 	//  P_R_P4Q3
+	  CAM_REG_WRITE16, 0x3752, 0xEE73, 	//  P_R_P4Q4
+	  CAM_REG_WRITE16, 0x3754, 0x27D1, 	//  P_B_P4Q0
+	  CAM_REG_WRITE16, 0x3756, 0x06AE, 	//  P_B_P4Q1
+	  CAM_REG_WRITE16, 0x3758, 0xF011, 	//  P_B_P4Q2
+	  CAM_REG_WRITE16, 0x375A, 0x55EF, 	//  P_B_P4Q3
+	  CAM_REG_WRITE16, 0x375C, 0xF112, 	//  P_B_P4Q4
+	  CAM_REG_WRITE16, 0x375E, 0x0851, 	//  P_G2_P4Q0
+	  CAM_REG_WRITE16, 0x3760, 0x2251, 	//  P_G2_P4Q1
+	  CAM_REG_WRITE16, 0x3762, 0x13B2, 	//  P_G2_P4Q2
+	  CAM_REG_WRITE16, 0x3764, 0xF410, 	//  P_G2_P4Q3
+	  CAM_REG_WRITE16, 0x3766, 0xBDB4, 	//  P_G2_P4Q4
+	  CAM_REG_WRITE16, 0x3784, 0x0286, // CENTER_COLUMN - [0:00:08.343]
+	  CAM_REG_WRITE16, 0x3782, 0x01CE, // CENTER_ROW - [0:00:08.346]
+	  CAM_REG_WRITE16, 0x37C0, 0x7CA6, 	//  P_GR_Q5
+	  CAM_REG_WRITE16, 0x37C2, 0x2EA9, 	//  P_RD_Q5
+	  CAM_REG_WRITE16, 0x37C4, 0x44E8, 	//  P_BL_Q5
+	  CAM_REG_WRITE16, 0x37C6, 0x3CC8, 	//  P_GB_Q5
+	  CAM_REG_WRITE16, 0x098E, 0x0000, 	//  LOGICAL addressing
+	  CAM_REG_WRITE16, 0xC960, 0x0BB8, 	//  CAM_PGA_L_CONFIG_COLOUR_TEMP
+	  CAM_REG_WRITE16, 0xC962, 0x7EE1, 	//  CAM_PGA_L_CONFIG_GREEN_RED_Q14
+	  CAM_REG_WRITE16, 0xC964, 0x7FDC, 	//  CAM_PGA_L_CONFIG_RED_Q14
+	  CAM_REG_WRITE16, 0xC966, 0x7EBC, 	//  CAM_PGA_L_CONFIG_GREEN_BLUE_Q14
+	  CAM_REG_WRITE16, 0xC968, 0x7FE1, 	//  CAM_PGA_L_CONFIG_BLUE_Q14
+	  CAM_REG_WRITE16, 0xC96A, 0x109A, 	//  CAM_PGA_M_CONFIG_COLOUR_TEMP
+	  CAM_REG_WRITE16, 0xC96C, 0x8020, 	//  CAM_PGA_M_CONFIG_GREEN_RED_Q14
+	  CAM_REG_WRITE16, 0xC96E, 0x80AF, 	//  CAM_PGA_M_CONFIG_RED_Q14
+	  CAM_REG_WRITE16, 0xC970, 0x805E, 	//  CAM_PGA_M_CONFIG_GREEN_BLUE_Q14
+	  CAM_REG_WRITE16, 0xC972, 0x8062, 	//  CAM_PGA_M_CONFIG_BLUE_Q14
+	  CAM_REG_WRITE16, 0xC974, 0x1D4C, 	//  CAM_PGA_R_CONFIG_COLOUR_TEMP
+	  CAM_REG_WRITE16, 0xC976, 0x82C9, 	//  CAM_PGA_R_CONFIG_GREEN_RED_Q14
+	  CAM_REG_WRITE16, 0xC978, 0x85B7, 	//  CAM_PGA_R_CONFIG_RED_Q14
+	  CAM_REG_WRITE16, 0xC97A, 0x8340, 	//  CAM_PGA_R_CONFIG_GREEN_BLUE_Q14
+	  CAM_REG_WRITE16, 0xC97C, 0x82FB, 	//  CAM_PGA_R_CONFIG_BLUE_Q14
+	  CAM_REG_WRITE16, 0xC95E, 0x0003, 	//  CAM_PGA_PGA_CONTROL#endif
+#endif
 
 #endif
 
@@ -1730,6 +1856,18 @@ int32_t cam_getTiming(uint16_t *hblank, uint16_t *hactive, uint16_t *vblank, uin
 	return responseInt;
 }
 
+int32_t cam_setFramerate(const uint8_t &framerate)
+{
+	uint16_t val = framerate*0x100;
+	g_sccb->Write16(0xC88C, val);		//cam_aet_max_frame_rate = 128*34000000/((46+height)*(542+width))
+	g_sccb->Write16(0xC88E, val);		//cam_aet_min_frame_rate = 128*34000000/((46+height)*(542+width))
+	cam_sendCommand();
+	// wait a bit because this takes some time to propagate through the imager
+	delayms(50);
+	return 0;
+
+}
+
 
 int32_t cam_setResolution(const uint16_t &xoffset, const uint16_t &yoffset, const uint16_t &width, const uint16_t &height)
 {
@@ -1935,6 +2073,8 @@ void cam_shadowCallback(const char *id, const uint8_t &val)
 		cam_setBrightness(val);
 	else if (strcmp(id, "Color saturation")==0)
 		cam_setSaturation(val);
+	else if (strcmp(id, "Frames per second")==0)
+		cam_setFramerate(val);
 	else if (strcmp(id, "Flicker avoidance")==0)
 		cam_setFlickerAvoidance(val);
 	else if (strcmp(id, "Auto Exposure Correction")==0)
@@ -1991,7 +2131,11 @@ void cam_loadParams()
 	prm_add("AWB Value", PRM_FLAG_INTERNAL, PRM_PRIORITY_DEFAULT,
 		"", UINT32(0), END);
 
-	uint8_t brightness, aec, saturation, awb, awbp, fa;
+	prm_add("Frames per second", PRM_FLAG_SLIDER, PRM_PRIORITY_1, 
+		"@c Camera @m 5 @M 61 Sets the frames per second (framerate) (default " STRINGIFY(CAM_FRAMERATE_DEFAULT) ")", UINT8(CAM_FRAMERATE_DEFAULT), END);
+	prm_setShadowCallback("Frames per second", (ShadowCallback)cam_shadowCallback);
+	
+	uint8_t brightness, aec, saturation, awb, awbp, fa, fps;
 	uint32_t ecv, wbv;
 	prm_get("Camera brightness", &brightness, END);
 	prm_get("Auto Exposure Correction", &aec, END);
@@ -1999,10 +2143,12 @@ void cam_loadParams()
 	prm_get("Auto White Balance", &awb, END);
 	prm_get("Auto White Balance on power-up", &awbp, END);
 	prm_get("Flicker avoidance", &fa);
+	prm_get("Frames per second", &fps);
 	
 	cam_setBrightness(brightness); 
 	cam_setSaturation(saturation);
 	cam_setFlickerAvoidance(fa);
+	cam_setFramerate(fps);
 	
 	delayus(50000); // wait a few frames 
 	cam_setAEC(aec);

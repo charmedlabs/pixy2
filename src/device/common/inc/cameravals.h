@@ -25,7 +25,8 @@
 
 #define CAM_BRIGHTNESS_DEFAULT  50
 #define CAM_BRIGHTNESS_SCALE    2.1
-#define CAM_SATURATION_DEFAULT	90    
+#define CAM_SATURATION_DEFAULT	90 
+#define CAM_FRAMERATE_DEFAULT   61
 
 
 #define CAM_RES0                0x00 

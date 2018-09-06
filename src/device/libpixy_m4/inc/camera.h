@@ -61,6 +61,7 @@ int32_t cam_getReg32(const uint16_t &reg);
 int32_t cam_getFramePeriod();
 int32_t cam_getBlankTime();
 
+int32_t cam_setFramerate(const uint8_t &framerate);
 int32_t cam_setResolution(const uint16_t &xoffset, const uint16_t &yoffset, const uint16_t &width, const uint16_t &height);
 
 void cam_loadParams();

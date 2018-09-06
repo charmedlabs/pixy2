@@ -167,6 +167,13 @@ static const ProcModule g_module[] =
 	"Toggle the white LEDs on and off"
 	"@r returns 0 if turned off, 1 if turned on"
 	},	
+	{
+	"printMC",
+	(ProcPtr)exec_printMC, 
+	{END}, 
+	"Print manufacturing constants"
+	"@r returns 0"
+	},	
 	END
 };
 
@@ -520,6 +527,12 @@ int32_t exec_toggleLamp()
 	int state = led_toggleLamp();
 	cc_setLEDOverride(state);
 	return state;
+}
+
+int32_t exec_printMC()
+{
+	cprintf(0, "0x%x 0x%x\n", *(uint32_t *)0x40045034, *(uint32_t *)0x40045038);
+	return 0;
 }
 
 int exec_runM0(uint8_t prog)
