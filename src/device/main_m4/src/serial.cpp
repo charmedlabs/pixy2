@@ -66,6 +66,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 {
 	uint8_t c;
 	uint16_t d;
+	int16_t turn;
 	uint16_t numBlobs;
 	uint32_t temp, width, height;
 	Iserial *serial = ser_getSerial();
@@ -229,12 +230,33 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	{
 		return line_legoLineData(buf, buflen);
 	}
-	else if (c==0x5b) // set turn agnle
+	else if (c==0x5b) // set turn angle
 	{
+		if (serial->receive((uint8_t *)&turn, 2)<2) // receive cc signature to look for
+			return 0;
+		line_setNextTurnAngle(turn);
 		return line_legoLineData(buf, buflen);
 	}
 	else if (c==0x5c) // reverse
 	{
+		line_reversePrimary();
+		return line_legoLineData(buf, buflen);
+	}
+	else if (c==0x5d) // lamp
+	{
+		if (serial->receive(&c, 1)==0)
+			return 0;		
+		if (c)
+		{
+			cc_setLEDOverride(true);
+			led_setLamp(0xff, 0xff);
+		}
+		else
+		{
+			cc_setLEDOverride(false);
+			led_setLamp(0, 0);
+		}
+			
 		return line_legoLineData(buf, buflen);
 	}
 	else  

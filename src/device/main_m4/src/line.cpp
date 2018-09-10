@@ -3163,7 +3163,7 @@ void handleLineState()
 					g_primaryPointMap &= ~LINE_HT_UP;
 					g_primaryPointMap |= LINE_HT_DOWN;
 				}
-				if (g_primaryPointMap&LINE_HT_DOWN)
+				else if (g_primaryPointMap&LINE_HT_DOWN)
 				{
 					g_primaryPointMap &= ~LINE_HT_DOWN;
 					g_primaryPointMap |= LINE_HT_UP;
@@ -3173,7 +3173,7 @@ void handleLineState()
 					g_primaryPointMap &= ~LINE_HT_RIGHT;
 					g_primaryPointMap |= LINE_HT_LEFT;
 				}
-				if (g_primaryPointMap&LINE_HT_LEFT)
+				else if (g_primaryPointMap&LINE_HT_LEFT)
 				{
 					g_primaryPointMap &= ~LINE_HT_LEFT;
 					g_primaryPointMap |= LINE_HT_RIGHT;
@@ -3707,17 +3707,29 @@ int line_legoLineData(uint8_t *buf, uint32_t buflen)
 	uint8_t codeVal;
 	uint16_t maxy;
 	Line2 *primary;
+	uint32_t x;
 	static int8_t intersectionPresent = -1;
-	
-	if (g_allMutex || buflen<4) 
-		return -1; // busy or not enough buffer 
+	static uint8_t lastData[4];
 
+	// override these because LEGO mode doesn't support 
+	//sg_delayedTurn = false;
+	g_manualVectorSelect = false;
+	
+	if (g_allMutex || !g_frameFlag) 
+	{
+		memcpy(buf, lastData, 4); // use last data
+		return 4; // busy or no new eata
+	}
+	
+	g_frameFlag = false;
+	
 	buf[2] = (uint8_t)-1;
 	
 	// only return primary line if we're tracking and primary line is in active (valid) state
 	if (g_lineState==LINE_STATE_TRACKING && g_primaryActive)
 	{
-		buf[0] = g_goalPoint.m_x;
+		x = (g_goalPoint.m_x *128)/78; // scale to 0 to 128
+		buf[0] = x;
 		if (g_goalPoint.m_y > g_primaryPoint.m_y)
 			buf[3] = 1;
 		else
@@ -3777,6 +3789,8 @@ int line_legoLineData(uint8_t *buf, uint32_t buflen)
 		if (buf[2]==(uint8_t)-1)
 			intersectionPresent = -1;
 	}
+	
+	memcpy(lastData, buf, 4);
 #endif
 	
 	return 4;
