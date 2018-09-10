@@ -27,6 +27,7 @@
 #include "camera.h"
 #include "led.h"
 #include "rcservo.h"
+#include "line.h"
 
 static const ProcModule g_module[] =
 {
@@ -68,15 +69,33 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	uint16_t numBlobs;
 	uint32_t temp, width, height;
 	Iserial *serial = ser_getSerial();
-
+	static int8_t ccc = -1;
+	static int8_t line = -1;
+	
 	if (serial->receive(&c, 1)==0)
 		return 0;
 
+	if (c>=0x50 && c<=0x59)
+	{
+		if (ccc<0)
+			ccc = exec_getProgIndex("color_connected_components");
+		if (exec_progIndex()!=ccc)
+			exec_runProg(ccc);
+	}
+	else if (c>=0x5a && c<=0x5f)
+	{
+		if (line<0)
+			line = exec_getProgIndex("line_tracking");
+		if (exec_progIndex()!=line)
+			exec_runProg(line);
+	}
+	
+		
 #if 1
 	if (c==0x00)
 	{
 		//printf("0\n");
-		char *str = "V0.1";
+		char *str = "V0.2";
 		strcpy((char *)buf, str);
 		return 5;
 		//return strlen((char *)str);
@@ -205,6 +224,18 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 		}
 #endif
 		return 6;
+	}
+	else if (c==0x5a)
+	{
+		return line_legoLineData(buf, buflen);
+	}
+	else if (c==0x5b) // set turn agnle
+	{
+		return line_legoLineData(buf, buflen);
+	}
+	else if (c==0x5c) // reverse
+	{
+		return line_legoLineData(buf, buflen);
 	}
 	else  
 	{
@@ -547,8 +578,7 @@ void ser_loadParams()
 {
 #ifndef LEGO
 	prm_add("Data out port", 0, PRM_PRIORITY_1, 
-		//"Selects the port that's used to output data (default Arduino ICSP SPI) @c Interface @s 0=Arduino_ICSP_SPI @s 1=SPI_with_SS @s 2=I2C @s 3=UART @s 4=analog/digital_x @s 5=analog/digital_y @s 6=LEGO_I2C", UINT8(0), END);
-		"Selects the port that's used to output data (default Arduino ICSP SPI) @c Interface @s 0=Arduino_ICSP_SPI @s 1=SPI_with_SS @s 2=I2C @s 3=UART @s 4=analog/digital_x @s 5=analog/digital_y", UINT8(0), END);
+		"Selects the port that's used to output data (default Arduino ICSP SPI) @c Interface @s 0=Arduino_ICSP_SPI @s 1=SPI_with_SS @s 2=I2C @s 3=UART @s 4=analog/digital_x @s 5=analog/digital_y @s 6=LEGO_I2C", UINT8(0), END);
 	prm_add("I2C address", PRM_FLAG_HEX_FORMAT, PRM_PRIORITY_1-1, 
 		"@c Interface Sets the I2C address if you are using I2C data out port. (default 0x54)", UINT8(I2C_DEFAULT_SLAVE_ADDR), END);
 	prm_add("UART baudrate", 0, PRM_PRIORITY_1-2, 
@@ -636,6 +666,7 @@ int ser_setInterface(uint8_t interface)
 		g_serial = g_i2c0;
  		g_i2c0->setSlaveAddr(0x01);
 		g_i2c0->setFlags(true, false);
+		g_oldProtocol = true;
 		break;
 		
 	default:

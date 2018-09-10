@@ -332,6 +332,7 @@ int line_setNextTurnAngle(int16_t angle);
 int line_setDefaultTurnAngle(int16_t angle);
 int line_setVector(uint8_t index);
 int line_reversePrimary();
+int line_legoLineData(uint8_t *buf, uint32_t buflen);
 
 int32_t line_streamEdgesLines(const uint8_t &bitmap);
 

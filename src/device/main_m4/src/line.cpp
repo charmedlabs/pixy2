@@ -3694,3 +3694,92 @@ int line_reversePrimary()
 	return 0;
 }
 
+int line_legoLineData(uint8_t *buf, uint32_t buflen)
+{
+#if 0
+	buf[0] = 1;
+	buf[1] = 2;
+	buf[2] = 3;
+	buf[3] = 4;
+	
+#else
+	SimpleListNode<Tracker<DecodedBarCode> > *j;
+	uint8_t codeVal;
+	uint16_t maxy;
+	Line2 *primary;
+	static int8_t intersectionPresent = -1;
+	
+	if (g_allMutex || buflen<4) 
+		return -1; // busy or not enough buffer 
+
+	buf[2] = (uint8_t)-1;
+	
+	// only return primary line if we're tracking and primary line is in active (valid) state
+	if (g_lineState==LINE_STATE_TRACKING && g_primaryActive)
+	{
+		buf[0] = g_goalPoint.m_x;
+		if (g_goalPoint.m_y > g_primaryPoint.m_y)
+			buf[3] = 1;
+		else
+			buf[3] = 0;
+	}
+	else
+	{
+		buf[0] = (uint8_t)-1;
+		buf[3] = 0;
+	}
+
+	for (j=g_barCodeTrackersList.m_first, maxy=0, codeVal=(uint8_t)-1; j!=NULL; j=j->m_next)
+	{
+		if (j->m_object.m_events&TR_EVENT_VALIDATED)
+		{
+			if (maxy < j->m_object.m_object.m_outline.m_yOffset)
+			{
+				maxy = j->m_object.m_object.m_outline.m_yOffset;
+				codeVal = j->m_object.m_object.m_val;
+			}
+		}
+	}
+	buf[1] = codeVal;
+	
+	if (g_newIntersection)
+	{
+		primary = findTrackedLine(g_primaryLineIndex);
+		if (primary)
+		{
+			//printf(0, "p %d %d %d %d %d\n", primary->m_p0.m_x, primary->m_p0.m_y, primary->m_p1.m_x, primary->m_p1.m_y);
+			//printf(0, "g %d %d\n", g_goalPoint.m_x, g_goalPoint.m_y);
+			//printf(0, "i %x %x\n", primary->m_i0, primary->m_i0);
+			
+			if (g_goalPoint.equals(primary->m_p0))
+				intersectionPresent = 0;
+			else
+				intersectionPresent = 1;
+		}
+		g_newIntersection = false;
+	}
+	if (intersectionPresent>=0)
+	{
+		primary = findTrackedLine(g_primaryLineIndex);
+		if (primary)
+		{
+			if (intersectionPresent==0)
+			{
+				if (primary->m_i1)
+					buf[2] = primary->m_i1->m_object.m_n;
+			}
+			else
+			{
+				if (primary->m_i0)
+					buf[2] = primary->m_i0->m_object.m_n;
+			}
+		}
+		if (buf[2]==(uint8_t)-1)
+			intersectionPresent = -1;
+	}
+#endif
+	
+	return 4;
+}
+
+

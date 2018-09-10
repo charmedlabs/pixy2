@@ -359,13 +359,14 @@ int32_t exec_runProg(const uint8_t &progIndex, Chirp *chirp)
 
 int32_t exec_runProgName(const char *name, Chirp *chirp)
 {
-	uint8_t i;
-	for (i=0; i<ProgTableUtil::m_progTableIndex; i++)
-	{
-		if (strncmp(ProgTableUtil::m_progTable[i].m_name, name, strlen(name))==0)
-			return exec_runProg(i)==i;
-	}
-	return -1;
+	int32_t res;
+	
+	res = exec_getProgIndex(name);
+	
+	if (res<0)
+		return res;
+	else
+		return (exec_runProg(res)==res);	
 }
 
 int32_t exec_runProgDefault(Chirp *chirp)
@@ -399,7 +400,7 @@ int32_t exec_getProgIndex(const char *progName, Chirp *chirp)
 	uint8_t i;
 	for (i=0; i<ProgTableUtil::m_progTableIndex; i++)
 	{
-		if (strcmp(progName, ProgTableUtil::m_progTable[i].m_name)==0)
+		if (strncmp(ProgTableUtil::m_progTable[i].m_name, progName, strlen(progName))==0)
 			return i;
 	}
 	return -1;
