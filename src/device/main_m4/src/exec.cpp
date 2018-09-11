@@ -346,15 +346,8 @@ int32_t exec_run()
 
 int32_t exec_runProg(const uint8_t &progIndex, Chirp *chirp)
 {		
-	if (progIndex>=ProgTableUtil::m_progTableIndex)
-		return -1;
-
 	exec_run();
-	g_progIndex = progIndex;
-
-	g_execArg = 0;
-	
-	return g_runningProgIndex;
+	return exec_setProgIndex(progIndex);
 }
 
 int32_t exec_runProgName(const char *name, Chirp *chirp)
@@ -404,6 +397,18 @@ int32_t exec_getProgIndex(const char *progName, Chirp *chirp)
 			return i;
 	}
 	return -1;
+}
+
+int32_t exec_setProgIndex(uint8_t progIndex)
+{
+	if (progIndex>=ProgTableUtil::m_progTableIndex)
+		return -1;
+
+	g_progIndex = progIndex;
+
+	g_execArg = 0;
+	
+	return g_runningProgIndex;
 }
 
 int32_t exec_list()
@@ -649,7 +654,8 @@ int8_t exec_progIndex()
 void exec_mainLoop()
 {
 	bool prevConnected = false;
-	bool connected, gui;
+	bool connected, gui, differ;
+	int32_t res;
 	
 #ifdef FOO
 	g_state = 4;
@@ -695,11 +701,17 @@ void exec_mainLoop()
 					Prog::m_view = -1; 
 					cc_setLEDOverride(false);
 				}
-				if (exec_progSetup()<0) // then run
+				
+				__disable_irq(); // prevent race condition with LEGO change program logic
+				differ = g_runningProgIndex!=g_progIndex;
+				res = exec_progSetup();
+				__enable_irq();
+				
+				if (res<0) // then run
 					g_state = 3; // stop state
 				else 
 				{
-					if (g_runningProgIndex!=g_progIndex)
+					if (differ)
 					{
 						exec_sendEvent(g_chirpUsb, EVT_PROG_CHANGE);
 						g_runningProgIndex = g_progIndex; // update g_runningProgIndex and arg -- we're now transitioned

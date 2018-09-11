@@ -3758,11 +3758,7 @@ int line_legoLineData(uint8_t *buf, uint32_t buflen)
 	{
 		primary = findTrackedLine(g_primaryLineIndex);
 		if (primary)
-		{
-			//printf(0, "p %d %d %d %d %d\n", primary->m_p0.m_x, primary->m_p0.m_y, primary->m_p1.m_x, primary->m_p1.m_y);
-			//printf(0, "g %d %d\n", g_goalPoint.m_x, g_goalPoint.m_y);
-			//printf(0, "i %x %x\n", primary->m_i0, primary->m_i0);
-			
+		{			
 			if (g_goalPoint.equals(primary->m_p0))
 				intersectionPresent = 0;
 			else

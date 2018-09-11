@@ -70,6 +70,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	uint16_t numBlobs;
 	uint32_t temp, width, height;
 	Iserial *serial = ser_getSerial();
+	bool progError = false;
 	static int8_t ccc = -1;
 	static int8_t line = -1;
 	
@@ -80,42 +81,33 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	{
 		if (ccc<0)
 			ccc = exec_getProgIndex("color_connected_components");
-		if (exec_progIndex()!=ccc)
-			exec_runProg(ccc);
+		progError = exec_setProgIndex(ccc)!=ccc;
 	}
 	else if (c>=0x5a && c<=0x5f)
 	{
 		if (line<0)
 			line = exec_getProgIndex("line_tracking");
-		if (exec_progIndex()!=line)
-			exec_runProg(line);
+		progError = exec_setProgIndex(line)!=line;
 	}
-	
 		
 #if 1
 	if (c==0x00)
 	{
-		//printf("0\n");
-		char *str = "V0.2";
+		const char *str = "V0.4";
 		strcpy((char *)buf, str);
 		return 5;
-		//return strlen((char *)str);
 	}
 	if (c==0x08)
 	{
-		//printf("8\n");
-		char *str = "Pixy";
+		const char *str = "Pixy2";
 		strcpy((char *)buf, str);
-		return 5;
-		//return strlen((char *)str);
+		return 6;
 	}
 	else if (c==0x10)
 	{
-		//printf("10\n");
-		char *str = "Pixy";
+		const char *str = "Pixy2";
 		strcpy((char *)buf, str);
-		return 5;
-		//return strlen((char *)str);
+		return 6;		
 	}
 	else 
 #endif
@@ -134,7 +126,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 		max = (BlobA *)g_blobs->getMaxBlob();
 		if (max==0)
 			memset(buf, 0, 7);
-		else if (max==(BlobA *)-1)
+		else if (max==(BlobA *)-1 || progError)
 			memset(buf, -1, 7);
 		else
 		{
@@ -174,7 +166,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 		max = g_blobs->getMaxBlob(c-0x50, &numBlobs);
 		if (max==0)
 			memset(buf, 0, 5);
-		else if (max==(BlobA *)-1)
+		else if (max==(BlobA *)-1 || progError)
 			memset(buf, -1, 5);
 		else
 		{
@@ -207,7 +199,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 		max = (BlobA *)g_blobs->getMaxBlob(d, &numBlobs); 
 		if (max==0)
 			memset(buf, 0, 6);
-		else if (max==(BlobA *)-1)
+		else if (max==(BlobA *)-1 || progError)
 			memset(buf, -1, 6);
 		else
 		{
@@ -228,7 +220,13 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	}
 	else if (c==0x5a)
 	{
-		return line_legoLineData(buf, buflen);
+		if (progError)
+		{
+			memset(buf, -1, 4);
+			return 4;
+		}
+		else
+			return line_legoLineData(buf, buflen);
 	}
 	else if (c==0x5b) // set turn angle
 	{

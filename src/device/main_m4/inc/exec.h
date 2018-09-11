@@ -132,6 +132,7 @@ int32_t exec_runProgDefault(Chirp *chirp=NULL);
 int32_t exec_runProgArg(const uint8_t &progIndex, const int32_t &arg, Chirp *chirp=NULL);
 int32_t exec_getProg(const uint8_t &progIndex, Chirp *chirp=NULL);
 int32_t exec_getProgIndex(const char *progName, Chirp *chirp=NULL);
+int32_t exec_setProgIndex(uint8_t progIndex);
 int32_t exec_list();
 int32_t exec_version(Chirp *chirp=NULL);
 int32_t exec_versionType(Chirp *chirp=NULL);
