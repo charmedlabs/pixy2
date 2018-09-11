@@ -215,7 +215,7 @@ void ProgBlobs::scaleLED(uint32_t r, uint32_t g, uint32_t b, uint32_t n)
 	max = MAX(r, g);
 	max = MAX(max, b);
 
-	// subtract min and form sataration from the distance from origin
+	// subtract min and form saturation from the distance from origin
 	sat = sqrt((float)((r-min)*(r-min) + (g-min)*(g-min) + (b-min)*(b-min)));
 	if (sat>30) // limit saturation to prevent things from getting too bright
 		sat = 30;

@@ -33,5 +33,6 @@ uint32_t lighten(uint32_t color, uint8_t factor);
 uint32_t saturate(uint32_t color);
 uint32_t rgbPack(uint32_t r, uint32_t g, uint32_t b);
 void rgbUnpack(uint32_t color, uint32_t *r, uint32_t *g, uint32_t *b);
+void interpolate(uint8_t *frame, uint16_t x, uint16_t y, uint16_t width, uint8_t *rp, uint8_t *gp, uint8_t *bp);
 
 #endif // CALC_H

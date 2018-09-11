@@ -106,3 +106,43 @@ uint32_t saturate(uint32_t color)
 
     return rgbPack(r, g, b);
 }
+
+void interpolate(uint8_t *frame, uint16_t x, uint16_t y, uint16_t width, uint8_t *rp, uint8_t *gp, uint8_t *bp)
+{
+	uint16_t r, g, b;
+	uint8_t *pixel = frame + y*width + x;
+    if (y&1)
+    {
+        if (x&1)
+        {
+            r = *pixel;
+            g = (*(pixel-1)+*(pixel+1)+*(pixel+width)+*(pixel-width))>>2;
+            b = (*(pixel-width-1)+*(pixel-width+1)+*(pixel+width-1)+*(pixel+width+1))>>2;
+        }
+        else
+        {
+            r = (*(pixel-1)+*(pixel+1))>>1;
+            g = *pixel;
+            b = (*(pixel-width)+*(pixel+width))>>1;
+        }
+    }
+    else
+    {
+        if (x&1)
+        {
+            r = (*(pixel-width)+*(pixel+width))>>1;
+            g = *pixel;
+            b = (*(pixel-1)+*(pixel+1))>>1;
+        }
+        else
+        {
+            r = (*(pixel-width-1)+*(pixel-width+1)+*(pixel+width-1)+*(pixel+width+1))>>2;
+            g = (*(pixel-1)+*(pixel+1)+*(pixel+width)+*(pixel-width))>>2;
+            b = *pixel;
+        }
+    }
+	*rp = r;
+	*gp = g;
+	*bp = b;
+}
+

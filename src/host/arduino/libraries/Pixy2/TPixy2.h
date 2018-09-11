@@ -55,6 +55,7 @@
 
 #include "Pixy2CCC.h"
 #include "Pixy2Line.h"
+#include "Pixy2Video.h"
 
 struct Version
 {
@@ -100,6 +101,10 @@ public:
   Pixy2Line<LinkType> line;
   friend class Pixy2Line<LinkType>;
 
+  // Video
+  Pixy2Video<LinkType> video;
+  friend class Pixy2Video<LinkType>;
+  
   LinkType m_link;
   
 private:
@@ -116,7 +121,7 @@ private:
 };
 
 
-template <class LinkType> TPixy2<LinkType>::TPixy2() : ccc(this), line(this)
+template <class LinkType> TPixy2<LinkType>::TPixy2() : ccc(this), line(this), video(this)
 {
   // allocate buffer space for send/receive
   m_buf = (uint8_t *)malloc(PIXY_BUFFERSIZE);
@@ -275,7 +280,7 @@ template <class LinkType> int8_t TPixy2<LinkType>::changeProg(const char *prog)
   // poll for program to change
   while(1)
   {
-    strncpy((char *) m_bufPayload, prog, PIXY_MAX_PROGNAME);
+    strncpy(m_bufPayload, prog, PIXY_MAX_PROGNAME);
     m_length = PIXY_MAX_PROGNAME;
     m_type = PIXY_TYPE_REQUEST_CHANGE_PROG;
     sendPacket();

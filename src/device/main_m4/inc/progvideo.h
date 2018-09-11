@@ -21,6 +21,10 @@
 
 #define PROG_NAME_VIDEO   "video"
 
+#define TYPE_REQUEST_GETRGB   0x70
+
+#define VIDEO_RGB_SIZE    2
+
 class ProgVideo : public Prog
 {
 public:
@@ -28,6 +32,8 @@ public:
 	virtual ~ProgVideo();
 	
 	virtual int loop(char *status);
+
+	virtual int packet(uint8_t type, const uint8_t *data, uint8_t len, bool checksum);
 
 private:
 	void sendCustom(uint8_t renderFlags=RENDER_FLAG_FLUSH);

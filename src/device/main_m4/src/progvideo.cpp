@@ -24,7 +24,11 @@
 #include "smlink.hpp"
 #include "misc.h"
 #include "pixyvals.h"
+#include "serial.h"
+#include "calc.h"
 #include <string.h>
+
+static uint8_t g_rgbSize = VIDEO_RGB_SIZE;
 
 REGISTER_PROG(ProgVideo, PROG_NAME_VIDEO, "continuous stream of raw camera frames");
 
@@ -66,6 +70,85 @@ int ProgVideo::loop(char *status)
 
 	return 0;
 }
+
+uint32_t getRGB(uint16_t x, uint16_t y, uint8_t sat)
+{
+	uint32_t rgb;
+	uint8_t r, g, b;
+	uint16_t i, j, rsum, gsum, bsum, d;
+	int16_t x0, x1, y0, y1;
+	uint8_t *p = (uint8_t *)SRAM1_LOC + CAM_PREBUF_LEN;
+	// average a square of size W
+	
+	if (x>=CAM_RES2_WIDTH)
+		x = CAM_RES2_WIDTH-1;
+	if (y>=CAM_RES2_HEIGHT)
+		y = CAM_RES2_HEIGHT-1;
+	
+	x0 = x-g_rgbSize;
+	if (x0<=0)
+		x0 = 1;
+	x1 = x+g_rgbSize;
+	if (x1>=CAM_RES2_WIDTH)
+		x1 = CAM_RES2_WIDTH-1;
+	
+	y0 = y-g_rgbSize;
+	if (y0<=0)
+		y0 = 1;
+	y1 = y+g_rgbSize;
+	if (y1>=CAM_RES2_HEIGHT)
+		y1 = CAM_RES2_HEIGHT-1;
+	
+	for (i=y0, rsum=gsum=bsum=0; i<=y1; i++)
+	{
+		for (j=x0; j<=x1; j++)
+		{
+			interpolate(p, j, i, CAM_RES2_WIDTH, &r, &g, &b);
+			rsum += r;
+			gsum += g;
+			bsum += b;
+		}
+	}
+	d = (y1-y0+1)*(x1-x0+1);
+	rsum /= d;
+	gsum /= d;
+	bsum /= d;
+	
+	rgb = rgbPack(r, g, b); 
+	if (sat)
+		return saturate(rgb);
+	else
+		return rgb;
+}
+
+int ProgVideo::packet(uint8_t type, const uint8_t *data, uint8_t len, bool checksum)
+{
+	if (type==TYPE_REQUEST_GETRGB)
+	{
+		uint16_t x, y;
+		uint32_t rgb;
+		uint8_t saturate;
+		
+		if (len!=5)
+		{
+			ser_sendError(SER_ERROR_INVALID_REQUEST, checksum);
+			return 0;
+		}
+		
+		x = *(uint16_t *)(data+0);
+		y = *(uint16_t *)(data+2);
+		saturate = *(data+4);
+
+		rgb = getRGB(x, y, saturate);
+		ser_sendResult(rgb, checksum);
+		
+		return 0;
+	}
+	
+	// nothing rings a bell, return error
+	return -1;
+}
+
 
 void ProgVideo::sendCustom(uint8_t renderFlags)
 {

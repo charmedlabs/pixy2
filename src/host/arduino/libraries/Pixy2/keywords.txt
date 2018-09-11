@@ -7,6 +7,9 @@ Block	KEYWORD1
 Vector	KEYWORD1
 Intersection KEYWORD1
 Barcode	KEYWORD1
+ccc	KEYWORD1
+line	KEYWORD1
+video 	KEYWORD1
 getVersion	KEYWORD2
 changeProg	KEYWORD2
 setServos	KEYWORD2
@@ -22,3 +25,4 @@ setDefaultTurn	KEYWORD2
 setVector	KEYWORD2
 init	KEYWORD2
 print	KEYWORD2
+getRGB	KEYWORD2
