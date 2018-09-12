@@ -19,7 +19,9 @@
 #include "exec.h"
 #include "pixytypes.h"
 
-#define PROG_NAME_VIDEO   "video"
+#define PROG_NAME_VIDEO         "video"
+#define PROG_VIDEO_MIN_TYPE     0x70
+#define PROG_VIDEO_MAX_TYPE     0x7f
 
 #define TYPE_REQUEST_GETRGB   0x70
 

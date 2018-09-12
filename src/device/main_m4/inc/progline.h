@@ -18,6 +18,9 @@
 
 #include "exec.h"
 
+#define PROG_LINE_MIN_TYPE                       0x30
+#define PROG_LINE_MAX_TYPE                       0x3f
+
 #define TYPE_REQUEST_GET_FEATURES                0x30
 #define TYPE_RESPONSE_GET_FEATURES               0x31
 #define TYPE_REQUEST_SET_MODE                    0x36

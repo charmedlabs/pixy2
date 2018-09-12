@@ -22,6 +22,9 @@
 #define SYNC_CAM_BRIGHTNESS        0x00fe
 #define SYNC_SET_LED               0x00fd
 
+#define PROG_BLOBS_MIN_TYPE        0x20
+#define PROG_BLOBS_MAX_TYPE        0x2f
+
 #define TYPE_REQUEST_GETBLOBS      0x20
 #define TYPE_RESPONSE_GETBLOBS     0x21
 

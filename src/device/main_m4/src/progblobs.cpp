@@ -28,7 +28,7 @@
 #include "button.h"
 #include "calc.h"
 
-REGISTER_PROG(ProgBlobs, PROG_NAME_BLOBS, "perform color connected components analysis");
+REGISTER_PROG(ProgBlobs, PROG_NAME_BLOBS, "perform color connected components analysis", PROG_BLOBS_MIN_TYPE, PROG_BLOBS_MAX_TYPE);
 
 uint8_t ProgBlobs::m_state;
 uint32_t ProgBlobs::m_timer;

@@ -30,8 +30,7 @@
 
 static uint8_t g_rgbSize = VIDEO_RGB_SIZE;
 
-REGISTER_PROG(ProgVideo, PROG_NAME_VIDEO, "continuous stream of raw camera frames");
-
+REGISTER_PROG(ProgVideo, PROG_NAME_VIDEO, "continuous stream of raw camera frames", PROG_VIDEO_MIN_TYPE, PROG_VIDEO_MAX_TYPE);
 ProgVideo::ProgVideo(uint8_t progIndex)
 {	
 	if (g_execArg==0)
@@ -128,7 +127,7 @@ int ProgVideo::packet(uint8_t type, const uint8_t *data, uint8_t len, bool check
 		uint16_t x, y;
 		uint32_t rgb;
 		uint8_t saturate;
-		
+
 		if (len!=5)
 		{
 			ser_sendError(SER_ERROR_INVALID_REQUEST, checksum);

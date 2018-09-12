@@ -60,6 +60,7 @@
 #define SER_TYPE_REQUEST_SERVO        0x12
 #define SER_TYPE_REQUEST_LED          0x14
 #define SER_TYPE_REQUEST_LAMP         0x16
+#define SER_TYPE_REQUEST_NO_PROG_MAX  0x1f
 
 // error codes
 #define SER_ERROR_GENERAL             -1
@@ -67,6 +68,7 @@
 #define SER_ERROR_INVALID_REQUEST     -3
 #define SER_ERROR_TYPE_UNSUPPORTED    -4
 #define SER_ERROR_BUTTON_OVERRIDE     -5
+#define SER_ERROR_PROG_CHANGING       -6
 
 int ser_init(Chirp *chirp);
 int32_t ser_packetChirp(const uint8_t &type, const uint32_t &len, const uint8_t *request, Chirp *chirp=NULL);

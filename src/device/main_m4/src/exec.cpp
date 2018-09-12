@@ -654,8 +654,8 @@ int8_t exec_progIndex()
 void exec_mainLoop()
 {
 	bool prevConnected = false;
-	bool connected, gui, differ;
-	int32_t res;
+	bool connected, gui;
+	uint8_t saveIndex;
 	
 #ifdef FOO
 	g_state = 4;
@@ -689,32 +689,28 @@ void exec_mainLoop()
 		{
 		case 0:	// setup state
 			led_set(0);  // turn off any stray led 
-			if (g_runningProgIndex!=g_progIndex || g_prog==NULL) // new program
+			saveIndex = g_progIndex; // save off program index to eliminate any race conditions with ISRs
+		
+			if (g_runningProgIndex!=saveIndex || g_prog==NULL) // new program
 			{
 				// if we're running a program already, exit
 				exec_progExit(); 
 				// reset shadow parameters, invalidate current view, ledOverride but only if we're switching programs
-				if (g_runningProgIndex!=g_progIndex)
+				if (g_runningProgIndex!=saveIndex)
 				{
 					// reset shadows
 					prm_resetShadows();
 					Prog::m_view = -1; 
 					cc_setLEDOverride(false);
 				}
-				
-				__disable_irq(); // prevent race condition with LEGO change program logic
-				differ = g_runningProgIndex!=g_progIndex;
-				res = exec_progSetup();
-				__enable_irq();
-				
-				if (res<0) // then run
+				if (exec_progSetup(saveIndex)<0) // then run				
 					g_state = 3; // stop state
 				else 
 				{
-					if (differ)
+					if (g_runningProgIndex!=saveIndex)
 					{
 						exec_sendEvent(g_chirpUsb, EVT_PROG_CHANGE);
-						g_runningProgIndex = g_progIndex; // update g_runningProgIndex and arg -- we're now transitioned
+						g_runningProgIndex = saveIndex; // update g_runningProgIndex and arg -- we're now transitioned
 					}
 					g_state = LOOP_STATE; // loop state
 				}
@@ -772,9 +768,9 @@ void exec_mainLoop()
 	}
 }
 
-int exec_progSetup()
+int exec_progSetup(uint8_t progIndex)
 {
-	if (g_progIndex<=ProgTableUtil::m_progTableIndex && g_prog==NULL)
+	if (progIndex<=ProgTableUtil::m_progTableIndex && g_prog==NULL)
 	{
 		if (g_debug&EXEC_DEBUG_MEMORY_CHECK)
 		{	
@@ -782,7 +778,7 @@ int exec_progSetup()
 			exec_testMemory();
 		}
 		
-		g_prog = (*ProgTableUtil::m_progTable[g_progIndex].m_create)(g_progIndex);
+		g_prog = (*ProgTableUtil::m_progTable[progIndex].m_create)(progIndex);
 		if (g_prog==NULL) // out of memory!
 			return -2;
 
@@ -834,24 +830,62 @@ int exec_progExit()
 	return -1;
 }
 
-int exec_progPacket(uint8_t type, const uint8_t *data, uint8_t len, bool checksum)
+int exec_changeProg(uint8_t type)
+{
+	int i;
+	
+	// If the current program is capable of handling, return success
+	if (ProgTableUtil::m_progTable[g_progIndex].m_minType<=type && type<=ProgTableUtil::m_progTable[g_progIndex].m_maxType)
+		return 0;
+	
+	// If not, find the correct program
+	for (i=0; i<ProgTableUtil::m_progTableIndex; i++)
+	{
+		if (ProgTableUtil::m_progTable[i].m_minType<=type && type<=ProgTableUtil::m_progTable[i].m_maxType)
+		{
+			g_progIndex = i;
+			return 0;
+		}
+	}
+	
+	return -1;
+}
+
+void exec_progPacket(uint8_t type, const uint8_t *data, uint8_t len, bool checksum)
 {
 	// only valid when we're in the loop state, ie after we've already called
 	// setup for that program, otherwise there might be a race
 	// condition between initialization of program and calling of progPacket, which 
 	// is interrupt-driven.
+	
 	if (g_state==LOOP_STATE)
 	{
 		if (g_override)
 		{
 			ser_sendError(SER_ERROR_BUTTON_OVERRIDE, checksum);
-			return 0;
+			return;
 		}
 		else if (g_prog)
-			return g_prog->packet(type, data, len, checksum);
+		{
+			if (exec_changeProg(type)<0)
+			{
+				ser_sendError(SER_ERROR_TYPE_UNSUPPORTED, checksum);
+				return;
+			}
+			if (g_progIndex!=g_runningProgIndex)
+			{
+				ser_sendError(SER_ERROR_PROG_CHANGING, checksum);
+				return;
+			}						
+			if (g_prog->packet(type, data, len, checksum)<0)
+				ser_sendError(SER_ERROR_TYPE_UNSUPPORTED, checksum);
+			return;
+		}
 	}
-	return -1;
+	else
+		ser_sendError(SER_ERROR_PROG_CHANGING, checksum);
 }
+
 
 int exec_progResolution(uint8_t type, bool checksum)
 {

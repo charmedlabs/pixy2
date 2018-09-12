@@ -28,7 +28,7 @@
 #include "serial.h"
 #include <string.h>
 
-REGISTER_PROG(ProgLine, PROG_NAME_LINE, "perform line tracking");
+REGISTER_PROG(ProgLine, PROG_NAME_LINE, "perform line tracking", PROG_LINE_MIN_TYPE, PROG_LINE_MAX_TYPE);
 
 const char *ProgLine::m_views[] =
 {
@@ -101,6 +101,7 @@ int ProgLine::packet(uint8_t type, const uint8_t *data, uint8_t len, bool checks
 			ser_sendResult(res, checksum);
 		else
 			ser_sendError(res, checksum);
+		return 0;
 	}
 	else if (type==TYPE_REQUEST_SET_NEXT_TURN_ANGLE)
 	{
@@ -110,6 +111,7 @@ int ProgLine::packet(uint8_t type, const uint8_t *data, uint8_t len, bool checks
 			ser_sendResult(res, checksum);
 		else
 			ser_sendError(res, checksum);
+		return 0;
 	}
 	else if (type==TYPE_REQUEST_SET_DEFAULT_TURN_ANGLE)
 	{
@@ -119,6 +121,7 @@ int ProgLine::packet(uint8_t type, const uint8_t *data, uint8_t len, bool checks
 			ser_sendResult(res, checksum);
 		else
 			ser_sendError(res, checksum);
+		return 0;
 	}
 	else if (type==TYPE_REQUEST_SET_VECTOR)
 	{
@@ -128,6 +131,7 @@ int ProgLine::packet(uint8_t type, const uint8_t *data, uint8_t len, bool checks
 			ser_sendResult(res, checksum);
 		else
 			ser_sendError(res, checksum);		
+		return 0;
 	}
 	else if (type==TYPE_REQUEST_REVERSE_VECTOR)
 	{
@@ -137,6 +141,7 @@ int ProgLine::packet(uint8_t type, const uint8_t *data, uint8_t len, bool checks
 			ser_sendResult(res, checksum);
 		else
 			ser_sendError(res, checksum);
+		return 0;
 	}		
 		
 	// nothing rings a bell, return error

@@ -30,7 +30,7 @@ extern Blobs *g_blobs;
 
 
 
-REGISTER_PROG(ProgPt, PROG_NAME_PANTILT, "perform pan/tilt tracking");
+REGISTER_PROG(ProgPt, PROG_NAME_PANTILT, "perform pan/tilt tracking", PROG_BLOBS_MIN_TYPE, PROG_BLOBS_MAX_TYPE);
 
 ServoLoop ProgPt::m_panLoop(PAN_AXIS);
 ServoLoop ProgPt::m_tiltLoop(TILT_AXIS);

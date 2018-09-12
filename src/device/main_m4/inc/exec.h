@@ -35,10 +35,10 @@
 #define EXEC_MAX_PROGS            7
 #define EXEC_DEBUG_MEMORY_CHECK   0x80
 
-#define REGISTER_PROG(progType, name, desc) \
+#define REGISTER_PROG(progType, name, desc, minType, maxType) \
     Prog *create ## progType(uint8_t progIndex) { \
         return new (std::nothrow) progType(progIndex); } \
-    ProgTableUtil g_register ## progType(name, desc, create ## progType);
+    ProgTableUtil g_register ## progType(name, desc, minType, maxType, create ## progType);
 
 
 class Prog 
@@ -87,16 +87,20 @@ struct ProgTableEntry
 {
 	const char *m_name;
 	const char *m_desc;
+	uint8_t m_minType;
+	uint8_t m_maxType;
 	Prog *(*m_create)(uint8_t progIndex);
 };
 		
 struct ProgTableUtil
 {
-    ProgTableUtil(const char *name, const char *desc, Prog *(*create)(uint8_t progIndex))
+    ProgTableUtil(const char *name, const char *desc, uint8_t minType, uint8_t maxType, Prog *(*create)(uint8_t progIndex))
     {
 		ProgTableEntry *entry = m_progTable + m_progTableIndex++;
 		entry->m_name = name;
 		entry->m_desc = desc;
+		entry->m_minType = minType;
+		entry->m_maxType = maxType;
 		entry->m_create = create;
     }
 
@@ -116,11 +120,12 @@ void exec_mainLoop();
 int exec_init(Chirp *chirp);
 void exec_select();
 
-int exec_progSetup();
+int exec_progSetup(uint8_t progIndex);
 int exec_progLoop(bool gui);
 int exec_progExit();
-int exec_progPacket(uint8_t type, const uint8_t *data, uint8_t len, bool checksum);
+void exec_progPacket(uint8_t type, const uint8_t *data, uint8_t len, bool checksum);
 int exec_progResolution(uint8_t type, bool checksum);
+int exec_changeProg(uint8_t type);
 
 // Chirp functions
 uint32_t exec_running(Chirp *chirp=NULL);
