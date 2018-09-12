@@ -36,12 +36,15 @@ void setup()
 
 void loop()
 { 
-  char pbuf[128];
-  uint32_t rgb; 
-  // grab blocks!
-  rgb = pixy.video.getRGB(150, 100);
-  sprintf(pbuf, "%lx", rgb);
-  Serial.println(pbuf); 
-
-
+  uint8_t r, g, b; 
+  // get RGB value at center of frame
+  if (pixy.video.getRGB(pixy.frameWidth/2, pixy.frameHeight/2, &r, &g, &b)==0)
+  {
+    Serial.print("red:");
+    Serial.print(r);
+    Serial.print(" green:");
+    Serial.print(g);
+    Serial.print(" blue:");
+    Serial.println(b);
+  }
 }

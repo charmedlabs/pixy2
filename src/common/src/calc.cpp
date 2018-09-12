@@ -100,49 +100,45 @@ uint32_t saturate(uint32_t color)
 
     // saturate while maintaining ratios
     m = 255.0f/max;
-    r = (uint8_t)(m*r);
-    g = (uint8_t)(m*g);
-    b = (uint8_t)(m*b);
+    r = (uint8_t)(m*r+0.5);
+    g = (uint8_t)(m*g+0.5);
+    b = (uint8_t)(m*b+0.5);
 
     return rgbPack(r, g, b);
 }
 
-void interpolate(uint8_t *frame, uint16_t x, uint16_t y, uint16_t width, uint8_t *rp, uint8_t *gp, uint8_t *bp)
+void interpolate(uint8_t *frame, uint16_t x, uint16_t y, uint16_t width, uint8_t *r, uint8_t *g, uint8_t *b)
 {
-	uint16_t r, g, b;
 	uint8_t *pixel = frame + y*width + x;
     if (y&1)
     {
         if (x&1)
         {
-            r = *pixel;
-            g = (*(pixel-1)+*(pixel+1)+*(pixel+width)+*(pixel-width))>>2;
-            b = (*(pixel-width-1)+*(pixel-width+1)+*(pixel+width-1)+*(pixel+width+1))>>2;
+            *r = *pixel;
+            *g = (*(pixel-1)+*(pixel+1)+*(pixel+width)+*(pixel-width))>>2;
+            *b = (*(pixel-width-1)+*(pixel-width+1)+*(pixel+width-1)+*(pixel+width+1))>>2;
         }
         else
         {
-            r = (*(pixel-1)+*(pixel+1))>>1;
-            g = *pixel;
-            b = (*(pixel-width)+*(pixel+width))>>1;
+            *r = (*(pixel-1)+*(pixel+1))>>1;
+            *g = *pixel;
+            *b = (*(pixel-width)+*(pixel+width))>>1;
         }
     }
     else
     {
         if (x&1)
         {
-            r = (*(pixel-width)+*(pixel+width))>>1;
-            g = *pixel;
-            b = (*(pixel-1)+*(pixel+1))>>1;
+            *r = (*(pixel-width)+*(pixel+width))>>1;
+            *g = *pixel;
+			*b = (*(pixel-1)+*(pixel+1))>>1;
         }
         else
         {
-            r = (*(pixel-width-1)+*(pixel-width+1)+*(pixel+width-1)+*(pixel+width+1))>>2;
-            g = (*(pixel-1)+*(pixel+1)+*(pixel+width)+*(pixel-width))>>2;
-            b = *pixel;
+            *r = (*(pixel-width-1)+*(pixel-width+1)+*(pixel+width-1)+*(pixel+width+1))>>2;
+            *g = (*(pixel-1)+*(pixel+1)+*(pixel+width)+*(pixel-width))>>2;
+            *b = *pixel;
         }
     }
-	*rp = r;
-	*gp = g;
-	*bp = b;
 }
 

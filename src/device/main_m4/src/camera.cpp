@@ -1640,7 +1640,7 @@ int32_t cam_setMode(const uint8_t &mode)
 	{
 		g_mode = 1;
 		//g_sccb->Write16(0x3210, 0x0018); // disable gamma
-		//g_sccb->Write16(0xc87c, 0x000a); // decrase black-level clipping 
+		//g_sccb->Write16(0xc87c, 0x000a); // decrease black-level clipping 
 		cam_setSaturation(CAM_SATURATION_DEFAULT);
 		//cam_setBrightness(g_brightness);
 	}
@@ -2112,7 +2112,7 @@ void cam_loadParams()
 	if (progVideo>=0)
 	{
 		prm_add("Color saturation", PROG_FLAGS(progVideo) | PRM_FLAG_ADVANCED | PRM_FLAG_SLIDER, PRM_PRIORITY_5,  
-			"@c Tuning @m 0 @M 255 Sets the color saturation, can be between 0 and 255 (default " STRINGIFY(CAM_SATURATION_DEFAULT) ")", UINT8(CAM_SATURATION_DEFAULT), END);
+			"@c Tuning @m 0 @M 255 Sets the color saturation, can be between 0 and 255 (default " STRINGIFY(CAM_SATURATION_DEFAULT+40) ")", UINT8(CAM_SATURATION_DEFAULT+40), END);
 		prm_setShadowCallback("Color saturation", (ShadowCallback)cam_shadowCallback);
 	}
 																		   

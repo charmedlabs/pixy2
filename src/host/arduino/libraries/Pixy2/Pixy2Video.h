@@ -32,14 +32,14 @@ public:
     m_pixy = pixy;
   }	  
  
-  int32_t getRGB(uint16_t x, uint16_t y, bool saturate=true);
+  int8_t getRGB(uint16_t x, uint16_t y, uint8_t *r, uint8_t *g, uint8_t *b, bool saturate=true);
   
 private:
   TPixy2<LinkType> *m_pixy;
   
 };
 
-template <class LinkType> int32_t Pixy2Video<LinkType>::getRGB(uint16_t x, uint16_t y, bool saturate=true)
+template <class LinkType> int8_t Pixy2Video<LinkType>::getRGB(uint16_t x, uint16_t y, uint8_t *r, uint8_t *g, uint8_t *b, bool saturate=true)
 {
   uint32_t res;
   
@@ -52,7 +52,12 @@ template <class LinkType> int32_t Pixy2Video<LinkType>::getRGB(uint16_t x, uint1
   if (m_pixy->recvPacket()==0 && m_pixy->m_type==PIXY_TYPE_RESPONSE_RESULT && m_pixy->m_length==4)
   {
     res = *(uint32_t *)m_pixy->m_buf;
-    return res;	
+	*b = res&0xff;
+	res >>= 8;
+	*g = res&0xff;
+	res >>= 8;
+	*r = res&0xff;
+    return 0;
   }
   else
       return PIXY_RESULT_ERROR;  // some kind of bitstream error
