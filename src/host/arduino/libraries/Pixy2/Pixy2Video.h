@@ -41,8 +41,6 @@ private:
 
 template <class LinkType> int8_t Pixy2Video<LinkType>::getRGB(uint16_t x, uint16_t y, uint8_t *r, uint8_t *g, uint8_t *b, bool saturate=true)
 {
-  uint32_t res;
-  
   *(int16_t *)(m_pixy->m_bufPayload + 0)= x;
   *(int16_t *)(m_pixy->m_bufPayload + 2)= y;
   *(m_pixy->m_bufPayload + 4)= saturate;
@@ -51,13 +49,10 @@ template <class LinkType> int8_t Pixy2Video<LinkType>::getRGB(uint16_t x, uint16
   m_pixy->sendPacket();
   if (m_pixy->recvPacket()==0 && m_pixy->m_type==PIXY_TYPE_RESPONSE_RESULT && m_pixy->m_length==4)
   {
-    res = *(uint32_t *)m_pixy->m_buf;
-	*b = res&0xff;
-	res >>= 8;
-	*g = res&0xff;
-	res >>= 8;
-	*r = res&0xff;
-    return 0;
+	*b = *(m_pixy->m_buf+0);
+	*g = *(m_pixy->m_buf+1);
+	*r = *(m_pixy->m_buf+2);
+    return 0; 
   }
   else
       return PIXY_RESULT_ERROR;  // some kind of bitstream error
