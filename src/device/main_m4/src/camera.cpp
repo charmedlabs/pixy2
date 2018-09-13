@@ -1626,7 +1626,7 @@ int cam_init()
 
 int32_t cam_setMode(const uint8_t &mode)
 {
-	if (mode==0 && g_mode!=0) // raw video
+	if (mode==0) // raw video
 	{
 		uint8_t saturation;
 		g_mode = 0;
@@ -1636,7 +1636,7 @@ int32_t cam_setMode(const uint8_t &mode)
 		cam_setSaturation(saturation);
 		//cam_setBrightness(g_brightness);
 	}
-	else if (mode!=0 && g_mode!=1) // CCC, processing
+	else if (mode!=0) // CCC, processing
 	{
 		g_mode = 1;
 		//g_sccb->Write16(0x3210, 0x0018); // disable gamma

@@ -120,13 +120,17 @@ template <class LinkType> int8_t Pixy2CCC<LinkType>::getBlocks(bool wait, uint8_
         numBlocks = m_pixy->m_length/sizeof(Block);
         return numBlocks;
       }
-      else if (m_pixy->m_type==PIXY_TYPE_RESPONSE_ERROR && *(int8_t *)m_pixy->m_buf==PIXY_RESULT_BUSY)
+	  // deal with busy and program changing states from Pixy (we'll wait)
+      else if (m_pixy->m_type==PIXY_TYPE_RESPONSE_ERROR)
       {
-        if (!wait)
-          return PIXY_RESULT_BUSY; // new data not available yet
+        if ((int8_t)m_pixy->m_buf[0]==PIXY_RESULT_BUSY)
+        {
+          if(!wait)
+            return PIXY_RESULT_BUSY; // new data not available yet
+		}
+	    else if ((int8_t)m_pixy->m_buf[0]!=PIXY_RESULT_PROG_CHANGING)
+          return m_pixy->m_buf[0];
       }
-      else // some other error, return as-is
-        return m_pixy->m_buf[0];       
     }
     else
       return PIXY_RESULT_ERROR;  // some kind of bitstream error

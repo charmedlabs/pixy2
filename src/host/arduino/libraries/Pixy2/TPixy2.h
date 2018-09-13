@@ -47,6 +47,7 @@
 #define PIXY_RESULT_CHECKSUM_ERROR           -3
 #define PIXY_RESULT_TIMEOUT                  -4
 #define PIXY_RESULT_BUTTON_OVERRIDE          -5
+#define PIXY_RESULT_PROG_CHANGING            -6
 
 // RC-servo values
 #define PIXY_RCS_MIN_POS                     0
@@ -182,12 +183,12 @@ template <class LinkType> int16_t TPixy2<LinkType>::getSync()
       cprev = c;
       if (start==PIXY_CHECKSUM_SYNC)
       {
-	m_cs = true;
-	return PIXY_RESULT_OK;
+        m_cs = true;
+        return PIXY_RESULT_OK;
       }
       if (start==PIXY_NO_CHECKSUM_SYNC)
       {
-	m_cs = false;
+        m_cs = false;
         return PIXY_RESULT_OK;
       }
     }
