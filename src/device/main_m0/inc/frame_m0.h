@@ -32,5 +32,6 @@ void grabM0R1(uint32_t xoffset, uint32_t yoffset, uint32_t xwidth, uint32_t ywid
 void grabM0R2(uint32_t xoffset, uint32_t yoffset, uint32_t xwidth, uint32_t ywidth, uint8_t *memory);
 int32_t grabM0R3(uint8_t *memy);
 int32_t getFrame(uint8_t *type, uint32_t *memory, uint16_t *xoffset, uint16_t *yoffset, uint16_t *xwidth, uint16_t *ywidth);
+void trackVsync(void);
 
 #endif

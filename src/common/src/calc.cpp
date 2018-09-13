@@ -100,9 +100,9 @@ uint32_t saturate(uint32_t color)
 
     // saturate while maintaining ratios
     m = 255.0f/max;
-    r = (uint8_t)(m*r+0.5);
-    g = (uint8_t)(m*g+0.5);
-    b = (uint8_t)(m*b+0.5);
+    r = (uint8_t)(m*r+0.5f);
+    g = (uint8_t)(m*g+0.5f);
+    b = (uint8_t)(m*b+0.5f);
 
     return rgbPack(r, g, b);
 }

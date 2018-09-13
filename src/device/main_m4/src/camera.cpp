@@ -2057,7 +2057,8 @@ int32_t cam_getReg32(const uint16_t &reg)
 
 int32_t cam_getFramePeriod()
 {
-	return SM_OBJECT->frameTime;
+	// get frame period from M0, scale by 16 get useconds
+	return SM_OBJECT->frameTime<<4;
 }
 
 int32_t cam_getBlankTime()
@@ -2132,21 +2133,19 @@ void cam_loadParams()
 		"", UINT32(0), END);
 
 	prm_add("Min frames per second", PRM_FLAG_SLIDER, PRM_PRIORITY_1, 
-		"@c Camera @m 5 @M 61 Sets the minimum frames per second (framerate).  Note, adjusting this value lower will allow Pixy to capture frames with less noise and in less light. (default " STRINGIFY(CAM_FRAMERATE_DEFAULT) ")", UINT8(CAM_FRAMERATE_DEFAULT), END);
+		"@c Camera @m 2 @M 61 Sets the minimum frames per second (framerate).  Note, adjusting this value lower will allow Pixy to capture frames with less noise and in less light. (default " STRINGIFY(CAM_FRAMERATE_DEFAULT) ")", UINT8(CAM_FRAMERATE_DEFAULT), END);
 	prm_setShadowCallback("Min frames per second", (ShadowCallback)cam_shadowCallback);
 	
-	uint8_t brightness, aec, saturation, awb, awbp, fa, fps;
+	uint8_t brightness, aec, awb, awbp, fa, fps;
 	uint32_t ecv, wbv;
 	prm_get("Camera brightness", &brightness, END);
 	prm_get("Auto Exposure Correction", &aec, END);
-	prm_get("Color saturation", &saturation, END);
 	prm_get("Auto White Balance", &awb, END);
 	prm_get("Auto White Balance on power-up", &awbp, END);
 	prm_get("Flicker avoidance", &fa);
 	prm_get("Min frames per second", &fps);
 	
 	cam_setBrightness(brightness); 
-	cam_setSaturation(saturation);
 	cam_setFlickerAvoidance(fa);
 	cam_setFramerate(fps);
 	

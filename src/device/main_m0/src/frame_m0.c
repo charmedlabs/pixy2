@@ -30,6 +30,7 @@ uint16_t g_lineStore[3*CAM_RES2_WIDTH+16];
 uint32_t g_timer;
 uint16_t g_hblank, g_hactive;
 uint16_t g_vblank, g_vactive;
+uint32_t g_vprev;
 
 void vsync()
 {
@@ -599,6 +600,7 @@ void skipLines(uint32_t lines)
 
 	// write frame period
 	timer = getTimer(g_timer);
+	timer >>= 4; // shift by 4 to get larger periods in there.  So the period is in 16usec units.
 	if (timer>=0xffff)
 		timer = 0xffff;
 	SM_OBJECT->frameTime = timer; 
@@ -607,8 +609,24 @@ void skipLines(uint32_t lines)
 	// skip lines
 	for (line=0; line<lines; line++)
 		skipLine();
+	
+	// reset vsync so we don't accidentally set timer early
+	g_vprev = 1;
 }
 
+// This function finds 'missed" vsync transitions so we can get a good
+// value for the frame period. 
+void trackVsync()
+{
+	uint32_t v;
+	
+	v = CAM_VSYNC();
+	if (v && !g_vprev)
+		setTimer(&g_timer);
+	g_vprev = v;
+}		
+
+	
 void callSync(void)
 {
 	sync((uint32_t *)&CAM_PORT, CAM_PCLK_MASK, (uint32_t *)&LPC_GPIO_PORT->PIN[5], 0x04);

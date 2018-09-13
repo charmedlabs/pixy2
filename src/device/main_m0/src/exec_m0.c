@@ -127,6 +127,7 @@ void loop2()
 		grabM0R3((uint8_t *)SRAM1_LOC+CAM_PREBUF_LEN);
 }
 
+
 void exec_loop(void)
 {
 #if 0
@@ -203,6 +204,9 @@ void exec_loop(void)
 				loop1();
 			else
 				loop2();
+			
+			// find missing vsync transitions
+			trackVsync();			
 			
 			chirpService();
 		}
