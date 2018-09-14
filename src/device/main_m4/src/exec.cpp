@@ -317,9 +317,15 @@ uint32_t exec_running(Chirp *chirp)
 		strcpy(statusString, ProgTableUtil::m_progTable[g_progIndex].m_name);
 		if (g_running)
 		{
-			// add frames per second to status message, but only if we're running
-			float fps = 1000000.0f/cam_getFramePeriod();
-			sprintf(statusString + strlen(statusString), " running, %.2f fps", fps);
+			// add frames per second to status message, but only if we're running (and period isn't zero)
+			uint32_t fp = cam_getFramePeriod();
+			if (fp>0)
+			{
+				float fps = 1000000.0f/cam_getFramePeriod();
+				sprintf(statusString + strlen(statusString), " running %.2f fps", fps);
+			}
+			else
+				strcat(statusString, " running");			
 		}
 		else
 			strcat(statusString, " stopped");

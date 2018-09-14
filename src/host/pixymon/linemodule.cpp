@@ -183,7 +183,7 @@ void LineModule::handleLISF(uint8_t renderFlags, const char *desc, uint16_t widt
         m_img.fill(0x00000000);
         m_painter.begin(&m_img);
     }
-    else
+    else if (m_painter.isActive())
     {
         m_painter.end();
         m_renderer->emitImage(m_img, renderFlags, QString(desc));
@@ -192,6 +192,9 @@ void LineModule::handleLISF(uint8_t renderFlags, const char *desc, uint16_t widt
 
 void LineModule::handleLISS(uint8_t renderMode, uint8_t index, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
+    if (!m_painter.isActive())
+        return;
+
     Qt::PenStyle style;
 
     if (renderMode==0)
@@ -214,8 +217,9 @@ void LineModule::handleNADF(uint8_t renderFlags, const char *desc, uint16_t widt
         m_img.fill(0x00000000);
         m_painter.begin(&m_img);
     }
-    else
+    else if (m_painter.isActive())
     {
+
         m_painter.end();
         m_renderer->emitImage(m_img, renderFlags, QString(desc));
     }
@@ -225,6 +229,9 @@ void LineModule::handleNADF(uint8_t renderFlags, const char *desc, uint16_t widt
 
 void LineModule::handleNADS(uint32_t len, uint8_t *pointData)
 {
+    if (!m_painter.isActive())
+        return;
+
     uint32_t i;
     QColor color;
     Point *points = (Point *)pointData;
@@ -253,8 +260,8 @@ void LineModule::renderLISG(uint8_t renderFlags, uint16_t width, uint16_t height
 
     QImage img(width*scale, height*scale, QImage::Format_ARGB32);
     img.fill(0x00000000);
-    m_painter.begin(&img);
-
+    if (!m_painter.begin(&img))
+        return;
 
     for (i=0; i<len; i++)
         Renderer::drawLine(&m_painter, colorLookup(segs[i].m_line), segs[i].m_p0.m_x*scale, segs[i].m_p0.m_y*scale, segs[i].m_p1.m_x*scale, segs[i].m_p1.m_y*scale);
@@ -301,7 +308,8 @@ void LineModule::handleCODE(uint8_t renderFlags, uint16_t width, uint16_t height
     img.fill(0x00000000);
 
     len /= sizeof(RectA) + 8;
-    p.begin(&img);
+    if (!p.begin(&img))
+        return;
 
     for (i=0; i<len; i++)
     {
@@ -333,7 +341,7 @@ void LineModule::handleBC0F(uint8_t renderFlags, const char *desc, uint16_t widt
         m_painter.begin(&m_img);
         m_painter.setPen(QPen(QColor(0xff, 0xff, 0xff, 0xff)));
     }
-    else
+    else if (m_painter.isActive())
     {
         m_painter.end();
         m_renderer->emitImage(m_img, renderFlags, QString(desc));
@@ -342,6 +350,9 @@ void LineModule::handleBC0F(uint8_t renderFlags, const char *desc, uint16_t widt
 
 void LineModule::handleBC0S(uint8_t index, uint16_t val, uint16_t xoffset, uint16_t yoffset, uint16_t width, uint16_t height)
 {
+    if (!m_painter.isActive())
+        return;
+
     uint16_t x, y, w, h;
     QString str;
     QColor color;
@@ -375,7 +386,8 @@ void LineModule::handlePVI0(uint8_t renderFlags, uint16_t width, uint16_t height
     m_scale = (float)m_renderer->m_video->activeWidth()/width;
     m_img = QImage(width*m_scale, height*m_scale, QImage::Format_ARGB32);
     m_img.fill(0x00000000);
-    m_painter.begin(&m_img);
+    if (!m_painter.begin(&m_img))
+        return;
 
     if (xSrc!=0 || ySrc!=0 || xDest!=0 || yDest!=0)
     {
