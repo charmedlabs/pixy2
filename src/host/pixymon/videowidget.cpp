@@ -13,7 +13,6 @@
 // end license header
 //
 
-#include <QTimer>
 #include <QPainter>
 #include <QDebug>
 #include <QMouseEvent>
@@ -35,6 +34,8 @@ VideoWidget::VideoWidget(MainWindow *main) : QWidget((QWidget *)main)
     m_main = main;
     m_xOffset=0;
     m_yOffset=0;
+    m_videoWidth = 0;
+    m_videoHeight = 0;
     m_scale = 1.0;
     m_drag = false;
     m_inputMode = NONE;
@@ -49,6 +50,7 @@ VideoWidget::VideoWidget(MainWindow *main) : QWidget((QWidget *)main)
     setSizePolicy(policy);
 
     setMouseTracking(true);
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(handleTimer()));
 }
 
 VideoWidget::~VideoWidget()
@@ -90,6 +92,11 @@ void VideoWidget::handleImage(QImage image, uchar renderFlags, QString desc)
         }
     }
 
+    if (m_layers.size()==0)
+    {
+        m_videoWidth = image.width();
+        m_videoHeight = image.height();
+    }
     m_layers.push_back(Layer(image, renderFlags!=0, desc));
     if (renderFlags&RENDER_FLAG_FLUSH)
         flush();
@@ -201,9 +208,21 @@ int VideoWidget::heightForWidth(int w) const
 
 void VideoWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    int xs, ys;
     Qt::MouseButtons b = event->buttons();
     int x = event->x();
     int y = event->y();
+
+    // deal with mouse location
+    xs = (x-m_xOffset)/m_scale+.5;
+    ys = (y-m_yOffset)/m_scale+.5;
+    if (0<=xs && xs<=m_videoWidth && 0<=ys && ys<=m_videoHeight)
+    {
+        emit mouseLoc(xs, ys);
+        m_timer.start(100);
+    }
+    else // out of active video, send invalid values
+        emit mouseLoc(-1, -1);
 
     if (m_drag==false && b&Qt::LeftButton)
     {
@@ -410,6 +429,14 @@ void VideoWidget::handleCheckBox()
     }
     repaint();
 }
+
+void VideoWidget::handleTimer()
+{
+    // if we're not under mouse, send invalid values so coordinates are erased
+    if (!this->underMouse())
+        emit mouseLoc(-1, -1);
+}
+
 
 int VideoWidget::saveImage(const QString &filename)
 {

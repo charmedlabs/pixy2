@@ -66,6 +66,7 @@ private slots:
     void handleLoadParams();
     void handleParamChange();
     void handleConfigDialogFinished();
+    void handleMouseLoc(int x, int y);
     void interpreterFinished();
     void handleVersion(ushort major, ushort minor, ushort build, QString type, ushort hwMajor, ushort hwMinor, ushort hwBuild);
     void on_actionAbout_triggered();
@@ -124,7 +125,8 @@ private:
     QMessageBox *m_fwMessage;
     bool m_testCycle;
     bool m_showConsole;
-    QLabel *m_status;
+    QLabel *m_statusLeft;
+    QLabel *m_statusRight;
 };
 
 #endif // MAINWINDOW_H

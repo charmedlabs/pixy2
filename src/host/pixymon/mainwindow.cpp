@@ -68,6 +68,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) :
     m_settings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, PIXYMON_COMPANY, PIXYMON_TITLE);
     m_console = new ConsoleWidget(this);
     m_video = new VideoWidget(this);
+    connect(m_video, SIGNAL(mouseLoc(int,int)), this, SLOT(handleMouseLoc(int, int)));
 
     m_ui->imageLayout->addWidget(m_video);
     m_ui->imageLayout->addWidget(m_console);
@@ -90,10 +91,12 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) :
 
     m_ui->menuProgram->setToolTipsVisible(true);
 
-    m_status = new QLabel;
+    m_statusLeft = new QLabel;
+    m_statusRight = new QLabel;
     // give the status a little of a left margin
     m_ui->statusBar->setContentsMargins(6, 0, 0, 0);
-    m_ui->statusBar->addPermanentWidget(m_status, 1);
+    m_ui->statusBar->addWidget(m_statusLeft);
+    m_ui->statusBar->addPermanentWidget(m_statusRight);
     updateButtons();
 
     m_parameters.add("Pixy start command", PT_STRING, "",
@@ -474,7 +477,7 @@ void MainWindow::error(QString message)
 void MainWindow::status(QString message)
 {
     message.remove('\n');
-    m_status->setText(message);
+    m_statusLeft->setText(message);
 }
 
 void MainWindow::handleActions()
@@ -842,6 +845,15 @@ void MainWindow::handleVersion(ushort major, ushort minor, ushort build, QString
     handleFirmware(major, minor, build, type, hwMajor, hwMinor, hwBuild);
     //str = str.sprintf("Pixy firmware version %d.%d.%d.\n", major, minor, build);
     //m_console->print(str);
+}
+
+void MainWindow::handleMouseLoc(int x, int y)
+{
+    QString text;
+    if (x<0) // invalid coordinates
+        m_statusRight->setText(""); // clear text
+    else
+        m_statusRight->setText(text.sprintf("%d, %d", x, y));
 }
 
 

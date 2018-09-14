@@ -18,6 +18,7 @@
 
 #include <QWidget>
 #include <QImage>
+#include <QTimer>
 
 #define VW_ASPECT_RATIO   ((float)316/(float)208)
 
@@ -74,6 +75,7 @@ protected:
 
 signals:
     void selection(int x0, int y0, int width, int height);
+    void mouseLoc(int x, int y);
 
 public slots:
     void flush();
@@ -82,6 +84,7 @@ public slots:
 
 private slots:
     void handleCheckBox();
+    void handleTimer();
 
 private:
     void updateDialog();
@@ -94,6 +97,8 @@ private:
 
     int m_width;
     int m_height;
+    int m_videoWidth;
+    int m_videoHeight;
     int m_xOffset;
     int m_yOffset;
     int m_x0;
@@ -106,6 +111,7 @@ private:
     InputMode m_inputMode;
     bool m_selection;
     float m_aspectRatio;
+    QTimer m_timer;
 
     QGridLayout *m_dialogLayout;
     QTabWidget *m_dialogTabs;
