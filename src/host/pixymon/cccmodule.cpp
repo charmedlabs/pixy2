@@ -231,7 +231,8 @@ void CccModule::renderBlobsA(bool blend, QImage *image, float scale, BlobA2 *blo
     QString str, modelStr;
     uint x, y, w, h, i;
 
-    p.begin(image);
+    if (!p.begin(image))
+        return;
 
     for (i=0; i<numBlobs; i++)
     {
@@ -273,7 +274,8 @@ void CccModule::renderBlobsC(bool blend, QImage *image, float scale, BlobC *blob
     QString str, modelStr;
     uint x, y, w, h, i;
 
-    p.begin(image);
+    if (!p.begin(image))
+        return;
 
     for (i=0; i<numBlobs; i++)
     {

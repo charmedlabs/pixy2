@@ -333,7 +333,8 @@ void Renderer::renderRects(const Points &points, uint32_t size)
     QImage img(m_video->activeWidth(), m_video->activeHeight(), QImage::Format_ARGB32);
     img.fill(0x00000000);
 
-    p.begin(&img);
+    if (!p.begin(&img))
+        return;
     p.setBrush(QBrush(QColor(0xff, 0xff, 0xff, 0x20)));
     p.setPen(QPen(QColor(0xff, 0xff, 0xff, 0xff)));
 
@@ -353,7 +354,8 @@ void Renderer::renderRect(const RectA &rect)
     QImage img(m_video->activeWidth(), m_video->activeHeight(), QImage::Format_ARGB32);
     img.fill(0x00000000);
 
-    p.begin(&img);
+    if (!p.begin(&img))
+        return;
     p.setBrush(QBrush(QColor(0xff, 0xff, 0xff, 0x20)));
     p.setPen(QPen(QColor(0xff, 0xff, 0xff, 0xff)));
 
@@ -444,7 +446,8 @@ int Renderer::renderBLT1(uint8_t renderFlags, uint16_t width, uint16_t height,
     else
         img.fill(0xff000000); // otherwise, we're just black
 
-    p.begin(&img);
+    if (!p.begin(&img))
+        return -1;
     p.setBrush(QBrush(QColor(0xff, 0xff, 0xff, 0x20)));
     p.setPen(QPen(QColor(0xff, 0xff, 0xff, 0xff)));
 

@@ -631,7 +631,7 @@ void MainWindow::on_actionAbout_triggered()
             "<a href=\"http://pixycam.com/pixysource2\">github.com</a>.<br><br>"
             "Please send problems, suggestions, ideas, inquiries and feedback, positive or negative "
             "(although we do love to hear the positive stuff!) "
-            "to <a href=\"mailto:support@charmedlabs.com\">support@charmedlabs.com</a>. "
+            "to <a href=\"mailto:support@pixycam.com\">support@pixycam.com</a>. "
             "Additional information can be found on our <a href=\"http://pixycam.com/pixy2\">website</a> "
             "and our <a href=\"http://pixycam.com/pixywiki2\">documentation wiki</a>.<br><br>"
             "Thanks for supporting our little guy!";
