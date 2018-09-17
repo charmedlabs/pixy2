@@ -316,8 +316,7 @@ template <class LinkType> int8_t TPixy2<LinkType>::getVersion()
     else if (m_type==PIXY_TYPE_RESPONSE_ERROR)
       return PIXY_RESULT_BUSY;
   }
-  else
-    return PIXY_RESULT_ERROR;  // some kind of bitstream error
+  return PIXY_RESULT_ERROR;  // some kind of bitstream error
 }
 
 
