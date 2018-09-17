@@ -236,7 +236,7 @@ int Chirp::vserialize(Chirp *chirp, uint8_t *buf, uint32_t bufSize, va_list *arg
 {
     int res;
     uint8_t type, origType;
-    uint32_t i, si;
+    uint32_t i;
     bool copy = true;
 
     if (chirp)
@@ -262,7 +262,6 @@ int Chirp::vserialize(Chirp *chirp, uint8_t *buf, uint32_t bufSize, va_list *arg
         if (type==END)
             break;
 
-        si = i; // save index so we can skip over data if needed
         buf[i++] = type;
 
         // treat hints like other types for now
@@ -1282,7 +1281,7 @@ int Chirp::recvFull(uint8_t *type, ChirpProc *proc, bool wait)
         if ((res=m_link->receive(m_buf, CRP_MAX_HEADER_LEN, wait?m_headerTimeout:0))<0)
             return res;
         // check to see if we received less data than expected
-        if (res<sizeof(uint32_t))
+        if (res<(int)sizeof(uint32_t))
             continue;
 		recvd = res;
         startCode = *(uint32_t *)m_buf;

@@ -205,7 +205,7 @@ class Chirp
 {
 public:
     Chirp(bool hinterested=false, bool client=false, Link *link=NULL);
-    ~Chirp();
+    virtual ~Chirp();
 
     virtual int init(bool connect);
     int setLink(Link *link);
