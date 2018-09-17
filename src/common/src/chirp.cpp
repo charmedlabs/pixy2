@@ -358,10 +358,6 @@ int Chirp::vserialize(Chirp *chirp, uint8_t *buf, uint32_t bufSize, va_list *arg
         else
             return CRP_RES_ERROR_PARSE;
 
-        // skip hint data if we're not a source
-        if (chirp && !chirp->m_hinformer && origType&CRP_HINT)
-            i = si;
-
         RESIZE_BUF(i);
     }
 
