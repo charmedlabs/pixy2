@@ -216,7 +216,7 @@ void VideoWidget::mouseMoveEvent(QMouseEvent *event)
     // deal with mouse location
     xs = (x-m_xOffset)/m_scale+.5;
     ys = (y-m_yOffset)/m_scale+.5;
-    if (0<=xs && xs<=m_videoWidth && 0<=ys && ys<=m_videoHeight)
+    if (0<=xs && xs<m_videoWidth && 0<=ys && ys<m_videoHeight)
     {
         emit mouseLoc(xs, ys);
         m_timer.start(100);

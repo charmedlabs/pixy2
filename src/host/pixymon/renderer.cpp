@@ -262,9 +262,10 @@ inline void Renderer::interpolateBayer(unsigned int width, unsigned int x, unsig
 
 int Renderer::renderBA81(uint8_t renderFlags, uint16_t width, uint16_t height, uint32_t frameLen, uint8_t *frame)
 {
-    uint16_t x, y;
+    uint16_t x, xx, y, yy;
     uint32_t *line;
     uint32_t r, g, b;
+    uint8_t *frame0;
 
     if (width*height>RAWFRAME_SIZE)
     {
@@ -278,12 +279,9 @@ int Renderer::renderBA81(uint8_t renderFlags, uint16_t width, uint16_t height, u
         m_rawFrame.m_height = height;
     }
 
-    // skip first line
-    frame += width;
-
     // don't render top and bottom rows, and left and rightmost columns because of color
     // interpolation
-    QImage img(width-2, height-2, QImage::Format_RGB32);
+    QImage img(width, height, QImage::Format_RGB32);
 
 #ifdef DEBUG_NOISE
     int32_t noise=0, prev=0, bw;
@@ -291,13 +289,23 @@ int Renderer::renderBA81(uint8_t renderFlags, uint16_t width, uint16_t height, u
     static uint32_t n = 1;
 #endif
 
-    for (y=1; y<height-1; y++)
+    for (y=0; y<height; y++)
     {
-        line = (unsigned int *)img.scanLine(y-1);
-        frame++;
-        for (x=1; x<width-1; x++, frame++)
+        yy = y;
+        if (yy==0)
+            yy++;
+        else if (yy==height-1)
+            yy--;
+        frame0 = frame + yy*width;
+        line = (unsigned int *)img.scanLine(y);
+        for (x=0; x<width; x++)
         {
-            interpolateBayer(width, x, y, frame, r, g, b);
+            xx = x;
+            if (xx==0)
+                xx++;
+            else if (xx==width-1)
+                xx--;
+            interpolateBayer(width, xx, yy, frame0+xx, r, g, b);
             if (m_highlightOverexp && (r>0xf4 || g>0xf4 || b>0xf4))
                 *line++ = (0xff<<24); // | 0xff0000;
             else
@@ -309,7 +317,6 @@ int Renderer::renderBA81(uint8_t renderFlags, uint16_t width, uint16_t height, u
             prev = bw;
 #endif
         }
-        frame++;
     }
 #ifdef DEBUG_NOISE
     avg = (float)avg*(n-1)/n + (float)noise/n; // n0/1 n0+n1/2 n0+n1+n3/3
