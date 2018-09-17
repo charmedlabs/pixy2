@@ -28,6 +28,9 @@
 #include "util.h"
 #include "TPixy2.h"
 
+#define PIXY2_RAW_FRAME_WIDTH   316
+#define PIXY2_RAW_FRAME_HEIGHT  208
+
 class Link2USB
 {
 public:
@@ -41,7 +44,10 @@ public:
   int16_t send (uint8_t *buf, uint8_t len);
   
   int callChirp (const char *func, ...);
-  int callChirp (const char *  func, va_list  args);
+  int callChirp (const char *func, va_list  args);
+  int stop();
+  int resume();
+  int getRawFrame(uint8_t **bayerFrame);
   
 private:
   Chirp *m_chirp;
@@ -50,6 +56,7 @@ private:
   uint8_t m_rbuf[RBUF_LEN];
   uint16_t m_rbufIndex;
   uint16_t m_rbufLen;
+  bool m_stopped;
 };
 
 typedef TPixy2<Link2USB> Pixy2;

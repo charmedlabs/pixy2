@@ -4,6 +4,7 @@ Link2USB::Link2USB()
 {
   m_link = NULL;
   m_chirp = NULL;
+  m_stopped = false;
 }
 
 Link2USB::~Link2USB()
@@ -122,3 +123,67 @@ int Link2USB::callChirp (const char *  func, va_list  args)
 
   return return_value;
 }
+
+int Link2USB::stop()
+{
+  int res, response;
+  char *status;
+  
+  res = callChirp("stop", END_OUT_ARGS, &response, END_IN_ARGS);
+  if (res<0)
+    return res;
+  while(1)
+  {
+    res = callChirp("running", END_OUT_ARGS, &response, &status, END_IN_ARGS);
+    if (res<0)
+      return res;
+    if (response==0)
+    {
+      m_stopped = true;
+      return 0;
+    }
+  }
+}
+
+int Link2USB::resume()
+{
+  int res, response;
+  
+  res = callChirp("run", END_OUT_ARGS, &response, END_IN_ARGS);
+  if (res<0)
+    return res;
+
+  m_stopped = false;
+  return response;
+}
+
+int Link2USB::getRawFrame(uint8_t **bayerFrame)
+{
+  int32_t res, response, fourcc, length;
+  uint8_t renderflags;
+  uint16_t width, height; 
+
+  if (!m_stopped)
+    return -10; // call stop() before getting frame!
+
+  res = callChirp("cam_getFrame", // String id for remote procedure
+		  UINT8(0x21), // mode
+		  UINT16(0), // xoffset
+		  UINT16(0), // yoffset
+		  UINT16(PIXY2_RAW_FRAME_WIDTH), // width
+		  UINT16(PIXY2_RAW_FRAME_HEIGHT), // height
+		  END_OUT_ARGS, // separator
+		  &response, // return value
+		  &fourcc,
+		  &renderflags,
+		  &width,
+		  &height,
+		  &length,
+		  bayerFrame, // frame pointer
+		  END_IN_ARGS);
+  if (res<0)
+    return res;
+  return response;
+}
+	     
+
