@@ -374,7 +374,7 @@
               <MiscControls></MiscControls>
               <Define>CORE_M0  IPC_SLAVE PIXY KEIL</Define>
               <Undefine></Undefine>
-              <IncludePath>., .\inc, ..\..\common\inc, ..\common\inc, inc</IncludePath>
+              <IncludePath>., ..\libpixy_m0\inc, .\inc, ..\..\common\inc, ..\common\inc, inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -429,104 +429,14 @@
               <FilePath>.\src\startup_LPC43xx_m0.s</FilePath>
             </File>
             <File>
-              <FileName>chirp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\chirp.c</FilePath>
-            </File>
-            <File>
-              <FileName>debug.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\debug.c</FilePath>
-            </File>
-            <File>
-              <FileName>exec_m0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\exec_m0.c</FilePath>
-            </File>
-            <File>
-              <FileName>frame_m0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\frame_m0.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>2</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>4</Optim>
-                    <oTime>1</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>qqueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\qqueue.c</FilePath>
-            </File>
-            <File>
-              <FileName>rls_m0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\rls_m0.c</FilePath>
-            </File>
-            <File>
-              <FileName>smlink.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\smlink.c</FilePath>
-            </File>
-            <File>
-              <FileName>debug_frmwrk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\common\src\debug_frmwrk.c</FilePath>
-            </File>
-            <File>
-              <FileName>lpc43xx_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\common\src\lpc43xx_uart.c</FilePath>
-            </File>
-            <File>
               <FileName>equeue.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\equeue.c</FilePath>
+            </File>
+            <File>
+              <FileName>libpixy_m0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\libpixy_m0\libpixy_m0.lib</FilePath>
             </File>
           </Files>
         </Group>
