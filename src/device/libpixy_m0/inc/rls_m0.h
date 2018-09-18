@@ -18,6 +18,8 @@
 
 #include <stdint.h>
 
+#define MAX_NEW_QVALS_PER_LINE   ((CAM_RES2_WIDTH/3)+2)
+
 int rls_init(void);
 int32_t getRLSFrame(uint32_t *m0Mem, uint32_t *lut);
 

@@ -19,10 +19,35 @@
 #include "exec_m0.h"
 #include "rls_m0.h"
 #include "qqueue.h"
+#include "smlink.h"
+#include "frame_m0.h"
+#include "rls_m0.h"
 
 uint8_t g_running = 0;
 uint8_t g_run = 0;
 int8_t g_program = -1;
+
+void setTimer(uint32_t *timer)
+{
+	*timer = LPC_TIMER2->TC;
+}
+
+uint32_t getTimer(uint32_t timer)
+{
+	uint32_t result; 
+	result = LPC_TIMER2->TC-timer;	
+
+	return result;
+}
+
+void delayus(uint32_t us)
+{
+	uint32_t timer;
+	
+	setTimer(&timer);
+	
+	while(getTimer(timer)<us);
+}
 
 int exec_init(void)
 {
@@ -58,20 +83,86 @@ void setup0()
 {
 }
 
-uint32_t g_m0mem = SRAM1_LOC + SRAM1_SIZE - LUT_MEMORY_SIZE - 0x1000;  // 4K should be enough for scratch mem (320/3+2)*8 + 320*8 = 3424
+uint32_t g_m0mem = SRAM1_LOC + SRAM1_SIZE - LUT_MEMORY_SIZE - (MAX_NEW_QVALS_PER_LINE*sizeof(Qval) + CAM_RES2_WIDTH*8 + 64); 
 uint32_t g_lut = SRAM1_LOC + SRAM1_SIZE - LUT_MEMORY_SIZE;
 
 void loop0()
 {
-//	g_qqueue->produced = g_qqueue->consumed = g_qqueue->writeIndex = 0;
-	getRLSFrame(&g_m0mem, &g_lut);	
+	if (SM_OBJECT->stream)
+	{
+		if (SM_OBJECT->streamState==0)
+		{
+			getRLSFrame(&g_m0mem, &g_lut);	
+			grabM0R2(0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT, (uint8_t *)SRAM1_LOC+CAM_PREBUF_LEN);
+			SM_OBJECT->streamState = 1;
+		}
+		// else wait
+	}
+	else
+		getRLSFrame(&g_m0mem, &g_lut);	
+}
+
+void setup1()
+{
+	SM_OBJECT->stream = 1;
+	SM_OBJECT->currentLine = 0;
+	SM_OBJECT->frameTime = 0;
+	SM_OBJECT->blankTime = 0;
+}
+
+void loop1()
+{
+	if (SM_OBJECT->stream)
+		grabM0R2(0, 0, CAM_RES2_WIDTH, CAM_RES2_HEIGHT, (uint8_t *)SRAM1_LOC+CAM_PREBUF_LEN);
+}
+
+void setup2()
+{
+	setup1();
+}
+
+void loop2()
+{
+	if (SM_OBJECT->stream)
+		grabM0R3((uint8_t *)SRAM1_LOC+CAM_PREBUF_LEN);
 }
 
 
 void exec_loop(void)
 {
 #if 0
-	uint16_t i = 0;
+#include "frame_m0.h"
+	uint32_t line, frame=0;
+	while(1)
+	{
+		while(!g_run)
+			chirpService();
+
+		setup0();
+		while(g_run)
+		{
+			line=0;
+			while(CAM_VSYNC())
+			{
+				//while(!CAM_HSYNC()&&CAM_VSYNC());
+				//while(CAM_HSYNC()&&CAM_VSYNC());
+				//line++;
+			} 
+			while(!CAM_VSYNC());
+			frame++;
+			if (frame%100==0)
+			{
+				_DBD32(frame); 
+				_DBG(" ");
+				//_DBD32(line);
+				_DBG("\n");
+			}
+		}
+		g_running = 0;
+	}
+#endif
+#if 0
+	uint32_t i = 0;
 	while(1)
 	{
 		while(!g_run)
@@ -82,10 +173,11 @@ void exec_loop(void)
 		{
 			loop0();
 			i++;
-			if (i%50==0)
+			if (i%100==0)
 			{
-				_DBD16(i); _DBG("\n");
+				_DBD32(i); _DBG("\n");
 			}
+			chirpService();
 		}
 		// set variable to indicate we've stopped
 		g_running = 0;
@@ -97,10 +189,25 @@ void exec_loop(void)
 		while(!g_run)
 			chirpService();
 		 	
-		setup0();
+		if (g_program==0)
+			setup0();
+		else if (g_program==1)
+			setup1();
+		else
+			setup2();
+		
 		while(g_run)
 		{
-			loop0();
+			if (g_program==0)
+				loop0();
+			else if (g_program==1)
+				loop1();
+			else
+				loop2();
+			
+			// find missing vsync transitions
+			trackVsync();			
+			
 			chirpService();
 		}
 		// set variable to indicate we've stopped

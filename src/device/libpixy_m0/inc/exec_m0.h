@@ -16,6 +16,10 @@
 #ifndef _EXEC_M0_H
 #define _EXEC_M0_H
 
+void setTimer(uint32_t *timer);
+uint32_t getTimer(uint32_t timer);
+void delayus(uint32_t us);
+
 int exec_init(void);
 uint32_t exec_running(void);
 int32_t exec_stop(void);
