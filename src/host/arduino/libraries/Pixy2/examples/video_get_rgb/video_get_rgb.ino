@@ -20,6 +20,8 @@
 // https://docs.pixycam.com/wiki/doku.php?id=wiki:v2:hooking_up_pixy_to_a_microcontroller_-28like_an_arduino-29
 //
   
+  
+// NOTE, THIS PROGRAM REQUIRES FIRMWARE VERSION 3.0.11 OR GREATER 
 #include <Pixy2.h>
 #include <stdio.h>
 

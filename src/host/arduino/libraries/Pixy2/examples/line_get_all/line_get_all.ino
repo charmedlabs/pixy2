@@ -23,6 +23,7 @@ void setup()
   Serial.print("Starting...\n");
 
   pixy.init();
+  // Change to line tracking program -- this call isn't necessary if firmware version is >= 3.0.11
   pixy.changeProg("line");
 }
 

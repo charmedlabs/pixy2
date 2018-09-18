@@ -42,6 +42,7 @@ void setup()
   // change to the line_tracking program.  Note, changeProg can use partial strings, so for example,
   // you can change to the line_tracking program by calling changeProg("line") instead of the whole
   // string changeProg("line_tracking")
+  // Note, this call isn't necessary if firmware version is >= 3.0.11
   pixy.changeProg("line");
 
   // look straight and down
