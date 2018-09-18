@@ -214,7 +214,6 @@ template <class LinkType> int16_t TPixy2<LinkType>::getSync()
 
 template <class LinkType> int16_t TPixy2<LinkType>::recvPacket()
 {
-  uint8_t i;
   uint16_t csCalc, csSerial;
   int16_t res;
   

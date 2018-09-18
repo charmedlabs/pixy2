@@ -9,6 +9,8 @@ BUILD_GET_BLOCKS_CPP_DEMO=1
 BUILD_GET_LINES_CPP_DEMO=1
 BUILD_CHIRP_COMMAND_CPP_DEMO=1
 BUILD_PAN_TILT_CPP_DEMO=1
+BUILD_GET_RAW_FRAME=1
+BUILD_GET_RGB_DEMO=1
 BUILD_PYTHON_DEMOS=1
 BUILD_LIBPIXYUSB2=1
 
@@ -85,6 +87,22 @@ fi
 
 if [ $BUILD_GET_LINES_CPP_DEMO == 1 ]; then
   ./build_get_lines_cpp_demo.sh
+fi
+
+##############################################################################################
+# GET RAW FRAME                                                                              #
+##############################################################################################
+
+if [ $BUILD_GET_RAW_FRAME == 1 ]; then
+  ./build_get_raw_frame.sh
+fi
+
+##############################################################################################
+# GET RGB DEMO                                                                               #
+##############################################################################################
+
+if [ $BUILD_GET_RGB_DEMO == 1 ]; then
+  ./build_get_rgb_demo.sh
 fi
 
 ##############################################################################################
@@ -176,6 +194,32 @@ if [ $BUILD_PAN_TILT_CPP_DEMO == 1 ]; then
   WHITE_TEXT
   printf "# pan_tilt_demo ................................................... "
   if [ -f ../build/pan_tilt_demo/pan_tilt_demo ]; then
+    GREEN_TEXT
+    printf "SUCCESS "
+  else
+    RED_TEXT
+    printf "FAILURE "
+  fi
+  echo ""
+fi
+
+if [ $BUILD_GET_RAW_FRAME == 1 ]; then
+  WHITE_TEXT
+  printf "# get_raw_frame ................................................... "
+  if [ -f ../build/get_raw_frame/get_raw_frame ]; then
+    GREEN_TEXT
+    printf "SUCCESS "
+  else
+    RED_TEXT
+    printf "FAILURE "
+  fi
+  echo ""
+fi
+
+if [ $BUILD_GET_RGB_DEMO == 1 ]; then
+  WHITE_TEXT
+  printf "# get_rgb_demo .................................................... "
+  if [ -f ../build/get_rgb_demo/get_rgb_demo ]; then
     GREEN_TEXT
     printf "SUCCESS "
   else

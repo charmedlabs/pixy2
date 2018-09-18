@@ -80,7 +80,7 @@ int16_t Link2USB::send(uint8_t *buf, uint8_t len)
   *(uint16_t *)m_rbuf = PIXY_NO_CHECKSUM_SYNC;
   m_rbuf[2] = type;
   m_rbuf[3] = length;
-  for (i=0; i<length && i<RBUF_LEN-4; i++)
+  for (i=0; i<(int)length && i<RBUF_LEN-4; i++)
     m_rbuf[i+4] = data[i];
     
   return 0;

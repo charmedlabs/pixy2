@@ -16,9 +16,6 @@
 #include "libpixyusb2.h"
 
 Pixy2        pixy;
-bool m_stopped = false;
-uint32_t *m_frame;
-
 
 
 int writePPM(uint16_t width, uint16_t height, uint32_t *image, const char *filename)
@@ -104,7 +101,7 @@ int main()
   uint32_t rgbFrame[PIXY2_RAW_FRAME_WIDTH*PIXY2_RAW_FRAME_HEIGHT];
   
   printf ("=============================================================\n");
-  printf ("= PIXY2 Get Blocks Demo                                     =\n");
+  printf ("= PIXY2 Get Raw Frame Example                               =\n");
   printf ("=============================================================\n");
 
   printf ("Connecting to Pixy2...");
