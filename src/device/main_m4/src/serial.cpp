@@ -28,6 +28,8 @@
 #include "led.h"
 #include "rcservo.h"
 #include "line.h"
+#include "progvideo.h"
+#include "calc.h"
 
 static const ProcModule g_module[] =
 {
@@ -64,15 +66,18 @@ static bool g_ready = false;
 
 uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 {
-	uint8_t c;
-	uint16_t d;
+	static uint16_t lastReverse = 0xffff;
+	static uint8_t lastLamp = 0;
+	uint8_t c, reverse, lamp;
+	uint16_t d, x, y;
 	int16_t turn;
 	uint16_t numBlobs;
-	uint32_t temp, width, height;
+	uint32_t temp, width, height, r, g, b;
 	Iserial *serial = ser_getSerial();
-	bool progError = false;
+	bool error = false;
 	static int8_t ccc = -1;
 	static int8_t line = -1;
+	static int8_t video = -1;
 	
 	if (serial->receive(&c, 1)==0)
 		return 0;
@@ -81,14 +86,21 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	{
 		if (ccc<0)
 			ccc = exec_getProgIndex("color_connected_components");
-		progError = exec_setProgIndex(ccc)!=ccc;
+		error = exec_setProgIndex(ccc)!=ccc;
 	}
-	else if (c>=0x5a && c<=0x5f)
+	else if (c>=0x5a && c<=0x5d)
 	{
 		if (line<0)
 			line = exec_getProgIndex("line_tracking");
-		progError = exec_setProgIndex(line)!=line;
+		error = exec_setProgIndex(line)!=line;
 	}
+	else if (c==0x5e)
+	{
+		if (video<0)
+			video = exec_getProgIndex("video");
+		error = exec_setProgIndex(video)!=video;
+	}
+	
 		
 #if 1
 	if (c==0x00)
@@ -126,7 +138,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 		max = (BlobA *)g_blobs->getMaxBlob();
 		if (max==0)
 			memset(buf, 0, 7);
-		else if (max==(BlobA *)-1 || progError)
+		else if (max==(BlobA *)-1 || error)
 			memset(buf, -1, 7);
 		else
 		{
@@ -166,7 +178,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 		max = g_blobs->getMaxBlob(c-0x50, &numBlobs);
 		if (max==0)
 			memset(buf, 0, 5);
-		else if (max==(BlobA *)-1 || progError)
+		else if (max==(BlobA *)-1 || error)
 			memset(buf, -1, 5);
 		else
 		{
@@ -199,7 +211,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 		max = (BlobA *)g_blobs->getMaxBlob(d, &numBlobs); 
 		if (max==0)
 			memset(buf, 0, 6);
-		else if (max==(BlobA *)-1 || progError)
+		else if (max==(BlobA *)-1 || error)
 			memset(buf, -1, 6);
 		else
 		{
@@ -220,42 +232,57 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	}
 	else if (c==0x5a)
 	{
-		if (progError)
+		if (serial->receive((uint8_t *)&turn, 2)==2 && 
+			serial->receive((uint8_t *)&reverse, 1)==1 &&
+			serial->receive((uint8_t *)&lamp, 1)==1 &&
+			error==false)
+		{
+			line_setNextTurnAngle(turn);
+			if (lastReverse!=0xffff && lastReverse!=reverse)
+				line_reversePrimary();
+			if (lastLamp!=lamp)
+			{
+				if (lamp)
+				{
+					cc_setLEDOverride(true);
+					led_setLamp(0xff, 0xff);
+				}
+				else
+				{
+					cc_setLEDOverride(false);
+					led_setLamp(0, 0);
+				}
+			}
+			
+			lastReverse = reverse;
+			lastLamp = lamp;
+			return line_legoLineData(buf, buflen);
+			}
+		else 
 		{
 			memset(buf, -1, 4);
 			return 4;
 		}
-		else
-			return line_legoLineData(buf, buflen);
 	}
-	else if (c==0x5b) // set turn angle
+	else if (c==0x5e) // get RGB
 	{
-		if (serial->receive((uint8_t *)&turn, 2)<2) // receive cc signature to look for
-			return 0;
-		line_setNextTurnAngle(turn);
-		return line_legoLineData(buf, buflen);
-	}
-	else if (c==0x5c) // reverse
-	{
-		line_reversePrimary();
-		return line_legoLineData(buf, buflen);
-	}
-	else if (c==0x5d) // lamp
-	{
-		if (serial->receive(&c, 1)==0)
-			return 0;		
-		if (c)
+		if (serial->receive(buf, 2)==2 && 
+			error==false)
 		{
-			cc_setLEDOverride(true);
-			led_setLamp(0xff, 0xff);
+			x = buf[0]*CAM_RES2_WIDTH/255;
+			y = buf[1]*CAM_RES2_HEIGHT/255;
+			temp = getRGB(x, y, true);
+			rgbUnpack(temp, &r, &g, &b);
+			buf[0] = r;
+			buf[1] = g;
+			buf[2] = b;
+			return 3;
 		}
 		else
 		{
-			cc_setLEDOverride(false);
-			led_setLamp(0, 0);
+			memset(buf, -1, 3);
+			return 3;
 		}
-			
-		return line_legoLineData(buf, buflen);
 	}
 	else  
 	{

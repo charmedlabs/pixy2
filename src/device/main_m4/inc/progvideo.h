@@ -42,5 +42,6 @@ private:
 
 };
 
+uint32_t getRGB(uint16_t x, uint16_t y, uint8_t sat);
 
 #endif
