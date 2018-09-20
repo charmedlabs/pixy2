@@ -1344,7 +1344,7 @@ void Interpreter::handleLoadParams(bool contextual)
     // if we're running, stop so this doesn't take too long....
     // (ie it would proceed with 1 property to returned frame, which could take 1 second or 2)
     running = m_running;
-    if (running==1) // only if we're running and not in forced state (running==2)
+    if (running!=2) // only if we're running and not in forced state (running==2)
     {
         sendStop();
         while(m_running) // poll for stop
@@ -1409,7 +1409,7 @@ void Interpreter::handleLoadParams(bool contextual)
     }
 
     // if we're running, we've stopped, now resume
-    if (running==1)
+    if (running!=2)
     {
         sendRun();
         m_fastPoll = false; // turn off fast polling...
