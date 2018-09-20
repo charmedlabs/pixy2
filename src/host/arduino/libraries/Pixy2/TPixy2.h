@@ -20,7 +20,7 @@
 #define _TPIXY2_H
 
 // uncomment to turn on debug prints to console
-//#define PIXY_DEBUG
+#define PIXY_DEBUG
 
 #define PIXY_DEFAULT_ARGVAL                  0x80000000
 #define PIXY_BUFFERSIZE                      0x104
@@ -40,6 +40,7 @@
 #define PIXY_TYPE_REQUEST_SERVO              0x12
 #define PIXY_TYPE_REQUEST_LED                0x14
 #define PIXY_TYPE_REQUEST_LAMP               0x16
+#define PIXY_TYPE_REQUEST_FPS                0x18
 
 #define PIXY_RESULT_OK                       0
 #define PIXY_RESULT_ERROR                    -1
@@ -89,6 +90,7 @@ public:
   int8_t setCameraBrightness(uint8_t brightness);
   int8_t setLED(uint8_t r, uint8_t g, uint8_t b);
   int8_t setLamp(uint8_t upper, uint8_t lower);
+  uint8_t getFPS();
   
   Version *version;
   uint16_t frameWidth;
@@ -414,4 +416,21 @@ template <class LinkType> int8_t TPixy2<LinkType>::setLamp(uint8_t upper, uint8_
   else
       return PIXY_RESULT_ERROR;  // some kind of bitstream error	
 }
+
+template <class LinkType> uint8_t TPixy2<LinkType>::getFPS()
+{
+  uint32_t res;
+  
+  m_length = 0; // no args
+  m_type = PIXY_TYPE_REQUEST_FPS;
+  sendPacket();
+  if (recvPacket()==0 && m_type==PIXY_TYPE_RESPONSE_RESULT && m_length==4)
+  {
+    res = *(uint32_t *)m_buf;
+    return (int8_t)res;	
+  }
+  else
+      return PIXY_RESULT_ERROR;  // some kind of bitstream error	
+}
+
 #endif

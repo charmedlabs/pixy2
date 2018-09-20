@@ -60,6 +60,7 @@
 #define SER_TYPE_REQUEST_SERVO        0x12
 #define SER_TYPE_REQUEST_LED          0x14
 #define SER_TYPE_REQUEST_LAMP         0x16
+#define SER_TYPE_REQUEST_FPS          0x18
 #define SER_TYPE_REQUEST_NO_PROG_MAX  0x1f
 
 // error codes

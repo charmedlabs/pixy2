@@ -433,6 +433,12 @@ void ser_packet(uint8_t type, const uint8_t *rxData, uint8_t len, bool checksum)
 			ser_sendResult(0, checksum);				
 		}				
 	}
+	else if (type==SER_TYPE_REQUEST_FPS) // get frames per second
+	{
+		float fps = cam_getFPS() + 0.5f;
+		uint32_t val = (uint32_t)fps; // convert to int, round up or down
+		ser_sendResult(val, checksum);				
+	}
 	else // not able to find handler, return error
 		ser_sendError(SER_ERROR_TYPE_UNSUPPORTED, checksum);		
 }

@@ -59,6 +59,7 @@ int32_t cam_getReg8(const uint16_t &reg);
 int32_t cam_getReg16(const uint16_t &reg);
 int32_t cam_getReg32(const uint16_t &reg);
 int32_t cam_getFramePeriod();
+float cam_getFPS();
 int32_t cam_getBlankTime();
 
 int32_t cam_setFramerate(const uint8_t &framerate);

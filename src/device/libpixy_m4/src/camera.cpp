@@ -2057,9 +2057,21 @@ int32_t cam_getReg32(const uint16_t &reg)
 
 int32_t cam_getFramePeriod()
 {
-	// get frame period from M0, scale by 16 get useconds
+	// get frame period from M0, scale by 16 to get useconds
 	return SM_OBJECT->frameTime<<4;
 }
+
+
+float cam_getFPS()
+{
+	float fps = 0.0f;
+	
+	uint32_t fp = cam_getFramePeriod();
+	if (fp>0)
+		fps = 1000000.0f/cam_getFramePeriod();
+	return fps;
+}
+
 
 int32_t cam_getBlankTime()
 {
