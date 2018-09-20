@@ -48,7 +48,7 @@ class ConsoleWidget;
 class Renderer;
 class MonModule;
 
-enum CommandType {STOP, RUN, STOP_LOCAL, RUN_LOCAL, LOAD_PARAMS, SAVE_PARAMS, UPDATE_PARAM, GET_ACTIONS_VIEWS, SET_VIEW, CLOSE};
+enum CommandType {STOP, RUN, STOP_LOCAL, RUN_LOCAL, LOAD_PARAMS, SAVE_PARAMS, UPDATE_PARAM, GET_ACTIONS_VIEWS, SET_VIEW, CLOSE, ARGV};
 
 struct Command
 {
@@ -57,6 +57,11 @@ struct Command
         m_type = type;
         m_arg0 = arg0;
         m_arg1 = arg1;
+    }
+    Command(const QStringList &argv)
+    {
+        m_type = ARGV;
+        m_argv = argv;
     }
 
     // need to implement this for QList::removeAll()
@@ -68,7 +73,7 @@ struct Command
     CommandType m_type;
     QVariant m_arg0;
     QVariant m_arg1;
-
+    QStringList m_argv; // executed on Pixy
 };
 
 typedef QList<Command> CommandQueue;
@@ -153,8 +158,7 @@ protected:
     virtual void run();
 
 private:
-    void handleHelp();
-    void handleCall(const QStringList &argv);
+    void handleHelp(const QStringList &argv);
     void listProgram();
     int call(const QStringList &argv, bool interactive=false);
     void handleResponse(const void *args[]);
@@ -174,6 +178,7 @@ private:
     void getActionsViews();
     void getProgs();
     void queueCommand(CommandType type, const QVariant &arg0=0, const QVariant &arg1=0);
+    void queueCommand(const QStringList &argv);
     void handlePendingCommand();
 
     void prompt();
@@ -184,6 +189,7 @@ private:
     void handlePixySaveParams(bool shadow);
     void handleLoadParams(bool contextual); // load from Pixy
     void handleUpdateParam();
+    void handleArgv(const QStringList &argv);
     void sendMonModulesParamChange();
 
     QStringList getSections(const QString &id, const QString &string);
@@ -234,9 +240,6 @@ private:
     QString m_command;
     QString m_print;
     Qt::Key m_key;
-    QStringList m_argv; // executed on Pixy
-    QStringList m_argvHost;  // executed on host
-    QStringList m_commandList;
     RectA m_selection;
 
     QList <MonModule *> m_modules;

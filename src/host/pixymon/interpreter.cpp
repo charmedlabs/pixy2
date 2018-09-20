@@ -534,6 +534,26 @@ int Interpreter::sendGetProg(uint index)
     return response;
 }
 
+void Interpreter::handleArgv(const QStringList &argv)
+{
+    int res;
+
+    if (argv[0]=="help")
+        handleHelp(argv);
+    else
+    {
+        res = call(argv, true);
+        if (res<0)
+        {
+            if (m_programming)
+            {
+                endLocalProgram();
+                clearLocalProgram();
+            }
+        }
+    }
+}
+
 void Interpreter::handlePendingCommand()
 {
     QMutexLocker locker(&m_mutexQueue);
@@ -591,6 +611,9 @@ void Interpreter::handlePendingCommand()
     case CLOSE:
         emit runState(-1, "");
         break;
+    case ARGV:
+        handleArgv(command.m_argv);
+        break;
     }
 }
 
@@ -607,6 +630,14 @@ void Interpreter::queueCommand(CommandType type, const QVariant &arg0, const QVa
     m_mutexQueue.unlock();
 }
 
+
+void Interpreter::queueCommand(const QStringList &argv)
+{
+    Command command(argv);
+    m_mutexQueue.lock();
+    m_commandQueue.push_back(command);
+    m_mutexQueue.unlock();
+}
 
 int Interpreter::saveImage(const QString &filename)
 {
@@ -771,38 +802,6 @@ void Interpreter::run()
         {
             emit enableConsole(true);
             Sleeper::msleep(10);
-            if (m_mutexProg.tryLock())
-            {
-                if (m_argv.size())
-                {
-                    if (m_argv[0]=="help")
-                        handleHelp();
-                    else
-                    {
-                        res = call(m_argv, true);
-                        if (res<0)
-                        {
-                            if (m_programming)
-                            {
-                                endLocalProgram();
-                                clearLocalProgram();
-                            }
-                            m_commandList.clear(); // abort our little scriptlet
-                        }
-                    }
-                    m_argv.clear();
-                    // check quickly to see if we're running after this command
-                    if (!m_programming)
-                        getRunning();
-                    // is there another command in our little scriptlet?
-                    if (m_commandList.size())
-                    {
-                        execute(m_commandList[0]);
-                        m_commandList.removeFirst();
-                    }
-                }
-                m_mutexProg.unlock();
-            }
         }
     }
     DBG("worker thread exiting");
@@ -952,7 +951,7 @@ void Interpreter::command(const QString &command)
     else if (words[0]=="close")
         queueCommand(CLOSE);
     else
-        handleCall(words);
+        queueCommand(words); // queue the command as-is
 end:
     prompt();
 }
@@ -968,28 +967,20 @@ void Interpreter::controlKey(Qt::Key key)
 }
 
 
-void Interpreter::handleHelp()
+void Interpreter::handleHelp(const QStringList &argv)
 {
     ChirpProc proc;
     ProcInfo info;
 
-    if (m_argv.size()==1)
+    if (argv.size()==1)
         printHelp();
-    else if (m_argv.size()>1)
+    else if (argv.size()>1)
     {
-        if ((proc=m_chirp->getProc(m_argv[1].toLocal8Bit()))>=0 && m_chirp->getProcInfo(proc, &info)>=0)
+        if ((proc=m_chirp->getProc(argv[1].toLocal8Bit()))>=0 && m_chirp->getProcInfo(proc, &info)>=0)
             emit textOut(printProc(&info, 1));
         else
             emit error("can't find procedure.\n");
     }
-}
-
-
-void Interpreter::handleCall(const QStringList &argv)
-{
-    m_mutexProg.lock();
-    m_argv = argv;
-    m_mutexProg.unlock();
 }
 
 void Interpreter::execute(QString command)
@@ -1006,16 +997,12 @@ void Interpreter::execute(QString command)
 
 void Interpreter::execute(QStringList commandList)
 {
+    int i;
+
     if (commandList.size()==0)
         return;
-    execute(commandList[0]);
-    commandList.removeFirst();
-    if (commandList.size()>0)
-    {
-        m_mutexProg.lock();
-        m_commandList = commandList;
-        m_mutexProg.unlock();
-    }
+    for (i=0; i<commandList.size(); i++)
+        command(commandList[0]);
 }
 
 void Interpreter::setView(uint index)
