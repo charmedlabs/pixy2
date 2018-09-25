@@ -159,7 +159,7 @@ QString Interpreter::printProc(const ProcInfo *info, int level)
     {
         if (i>0)
             print +=  ", ";
-	j = i;
+    j = i;
         print += printArgType(&info->argTypes[i], i) + " " + list[j].first;
     }
     print += ")\n";
@@ -676,7 +676,7 @@ void Interpreter::run()
 
         if (m_link.open()<0)
             throw std::runtime_error("Unable to open USB device.");
-        m_chirp = new ChirpMon(this, &m_link);        
+        m_chirp = new ChirpMon(this, &m_link);
 
 #if 0
         uint8_t buf[128];
@@ -1350,7 +1350,7 @@ void Interpreter::handleLoadParams(bool contextual)
         while(m_running) // poll for stop
             getRunning();
     }
-    // reset, we're going to reload with fresh data.
+    // reset, we're going to reload with fresh data
     m_pixyParameters.clear();
 
     for (i=0; true; i++)
