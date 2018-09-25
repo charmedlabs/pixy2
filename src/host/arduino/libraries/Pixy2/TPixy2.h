@@ -90,7 +90,7 @@ public:
   int8_t setCameraBrightness(uint8_t brightness);
   int8_t setLED(uint8_t r, uint8_t g, uint8_t b);
   int8_t setLamp(uint8_t upper, uint8_t lower);
-  uint8_t getFPS();
+  int8_t getFPS();
   
   Version *version;
   uint16_t frameWidth;
@@ -417,7 +417,7 @@ template <class LinkType> int8_t TPixy2<LinkType>::setLamp(uint8_t upper, uint8_
       return PIXY_RESULT_ERROR;  // some kind of bitstream error	
 }
 
-template <class LinkType> uint8_t TPixy2<LinkType>::getFPS()
+template <class LinkType> int8_t TPixy2<LinkType>::getFPS()
 {
   uint32_t res;
   
