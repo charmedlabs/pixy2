@@ -1350,7 +1350,7 @@ void Interpreter::handleLoadParams(bool contextual)
         while(m_running) // poll for stop
             getRunning();
     }
-    // reset, we're going to reload with fresh data
+    // reset, we're going to reload with fresh data.
     m_pixyParameters.clear();
 
     for (i=0; true; i++)
