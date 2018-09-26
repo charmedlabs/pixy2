@@ -1001,8 +1001,10 @@ void Interpreter::execute(QStringList commandList)
 
     if (commandList.size()==0)
         return;
+    if (m_running==true)
+        queueCommand(STOP);
     for (i=0; i<commandList.size(); i++)
-        command(commandList[0]);
+        command(commandList[i]);
 }
 
 void Interpreter::setView(uint index)
