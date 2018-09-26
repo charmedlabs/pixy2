@@ -90,6 +90,7 @@ public:
   int8_t setCameraBrightness(uint8_t brightness);
   int8_t setLED(uint8_t r, uint8_t g, uint8_t b);
   int8_t setLamp(uint8_t upper, uint8_t lower);
+  int8_t getResolution();
   int8_t getFPS();
   
   Version *version;
@@ -114,7 +115,6 @@ private:
   int16_t getSync();
   int16_t recvPacket();
   int16_t sendPacket();
-  int8_t getResolution();
 
   uint8_t *m_buf;
   uint8_t *m_bufPayload;

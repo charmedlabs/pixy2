@@ -33,12 +33,16 @@ void setup()
   Serial.begin(115200);
   Serial.print("Starting...\n");
   
+  // we must initialize the pixy object
   pixy.init();
+  // Getting the RGB pixel values requires the 'video' program
+  pixy.changeProg("video");
 }
 
 void loop()
 { 
   uint8_t r, g, b; 
+  
   // get RGB value at center of frame
   if (pixy.video.getRGB(pixy.frameWidth/2, pixy.frameHeight/2, &r, &g, &b)==0)
   {

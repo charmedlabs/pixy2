@@ -33,9 +33,14 @@ void setup()
   Serial.begin(115200);
   Serial.print("Starting...\n");
   
+  // initialize motor objects
   motors.setLeftSpeed(0);
   motors.setRightSpeed(0);
+  
+  // need to initialize pixy object
   pixy.init();
+  // user color connected components program
+  pixy.changeProg("color_connected_components");
 }
 
 // Take the biggest block (blocks[0]) that's been around for at least 30 frames (1/2 second)
