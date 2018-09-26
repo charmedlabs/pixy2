@@ -71,9 +71,13 @@ int main()
   // won't be cleaned up correctly, leaving Pixy and possibly USB
   // driver in a defunct state.
   signal (SIGINT, handle_SIGINT);
- 
+
+  // need to initialize pixy!
   pixy.init();
 
+  // use ccc program to track objects
+  pixy.changeProg("color_connected_components");
+  
   while(1)
   {
     pixy.ccc.getBlocks();

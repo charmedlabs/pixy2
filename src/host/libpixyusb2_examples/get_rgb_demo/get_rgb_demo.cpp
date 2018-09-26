@@ -32,6 +32,12 @@ int main()
 {
   int  Result;
   uint8_t r, g, b;
+
+  // Catch CTRL+C (SIGINT) signals, otherwise the Pixy object
+  // won't be cleaned up correctly, leaving Pixy and possibly USB
+  // driver in a defunct state.
+  signal (SIGINT, handle_SIGINT);
+
   
   printf ("=============================================================\n");
   printf ("= PIXY2 Get RGB values demo                                 =\n");
@@ -66,7 +72,7 @@ int main()
     pixy.version->print();
   }
 
-  while(1)
+  while(run_flag)
   {
     pixy.video.getRGB(158, 104, &r, &g, &b);
     printf("r:%hhu g:%hhu b:%hhu\n", r, g, b);
