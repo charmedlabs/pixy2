@@ -121,13 +121,11 @@ void ConsoleWidget::command(QString text)
     text.remove(QRegExp("^\\s+")); // remove leading whitespace
     if (text=="")
         return;
-    handleColor(CW_DEFAULT_COLOR);
     prompt();
+    handleColor(Qt::blue);
     if (!text.endsWith('\n'))
         text = text + '\n';
     insertPlainText(text);
-
-    emit textLine(text);
 }
 
 void ConsoleWidget::error(QString text)

@@ -58,10 +58,11 @@ struct Command
         m_arg0 = arg0;
         m_arg1 = arg1;
     }
-    Command(const QStringList &argv)
+    Command(const QStringList &argv, bool interactive)
     {
         m_type = ARGV;
         m_argv = argv;
+        m_interactive = interactive;
     }
 
     // need to implement this for QList::removeAll()
@@ -73,6 +74,7 @@ struct Command
     CommandType m_type;
     QVariant m_arg0;
     QVariant m_arg1;
+    bool m_interactive;
     QStringList m_argv; // executed on Pixy
 };
 
@@ -98,7 +100,7 @@ public:
     void runOrStopProgram(bool local=false);
     uint programRunning();
 
-    void execute(QString command);
+    void execute(QString comm);
     void execute(QStringList commandList);
     void setView(uint index);
     void loadParams(bool contextual);
@@ -151,7 +153,7 @@ public slots:
 
 private slots:
     void controlKey(Qt::Key key);
-    void command(const QString &command);
+    void command(const QString &command, bool interactive=true);
     void handleSelection(int x0, int y0, int width, int height);
 
 protected:
@@ -160,7 +162,7 @@ protected:
 private:
     void handleHelp(const QStringList &argv);
     void listProgram();
-    int call(const QStringList &argv, bool interactive=false);
+    int call(const QStringList &argv, bool interactive=true);
     void handleResponse(const void *args[]);
     void handleData(const void *args[]);
 
@@ -178,7 +180,7 @@ private:
     void getActionsViews();
     void getProgs();
     void queueCommand(CommandType type, const QVariant &arg0=0, const QVariant &arg1=0);
-    void queueCommand(const QStringList &argv);
+    void queueCommand(const QStringList &argv, bool interactive);
     void handlePendingCommand();
 
     void prompt();
@@ -189,7 +191,7 @@ private:
     void handlePixySaveParams(bool shadow);
     void handleLoadParams(bool contextual); // load from Pixy
     void handleUpdateParam();
-    void handleArgv(const QStringList &argv);
+    void handleArgv(const QStringList &argv, bool interactive);
     void sendMonModulesParamChange();
 
     QStringList getSections(const QString &id, const QString &string);

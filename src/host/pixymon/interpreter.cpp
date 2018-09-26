@@ -459,13 +459,22 @@ int Interpreter::sendRun()
 int Interpreter::sendStop()
 {
     int res, response;
+    QTime time;
 
     m_fastPoll = true;
 
     res = m_chirp->callSync(m_exec_stop, END_OUT_ARGS, &response, END_IN_ARGS);
     if (res<0)
         return res;
-    return response;
+
+    time.start();
+    while(m_running) // poll for stop
+    {
+        getRunning();
+        if (time.elapsed()>1000)
+            return -2;
+    }
+    return 0;
 }
 
 
@@ -534,22 +543,25 @@ int Interpreter::sendGetProg(uint index)
     return response;
 }
 
-void Interpreter::handleArgv(const QStringList &argv)
+void Interpreter::handleArgv(const QStringList &argv, bool interactive)
 {
-    int res;
+    int i, res;
 
-    if (argv[0]=="help")
-        handleHelp(argv);
-    else
+    // if we're not typing in the command (interactive), print it to the console for feedback
+    if (!interactive)
     {
-        res = call(argv, true);
-        if (res<0)
+        QString comm;
+        for(i=0; i<argv.size(); i++)
+            comm += argv[i] + " ";
+        emit consoleCommand(comm);
+    }
+    res = call(argv);
+    if (res<0)
+    {
+        if (m_programming)
         {
-            if (m_programming)
-            {
-                endLocalProgram();
-                clearLocalProgram();
-            }
+            endLocalProgram();
+            clearLocalProgram();
         }
     }
 }
@@ -612,7 +624,7 @@ void Interpreter::handlePendingCommand()
         emit runState(-1, "");
         break;
     case ARGV:
-        handleArgv(command.m_argv);
+        handleArgv(command.m_argv, command.m_interactive);
         break;
     }
 }
@@ -631,9 +643,9 @@ void Interpreter::queueCommand(CommandType type, const QVariant &arg0, const QVa
 }
 
 
-void Interpreter::queueCommand(const QStringList &argv)
+void Interpreter::queueCommand(const QStringList &argv, bool interactive)
 {
-    Command command(argv);
+    Command command(argv, interactive);
     m_mutexQueue.lock();
     m_commandQueue.push_back(command);
     m_mutexQueue.unlock();
@@ -906,7 +918,7 @@ void Interpreter::prompt()
         emit prompt(PROMPT);
 }
 
-void Interpreter::command(const QString &command)
+void Interpreter::command(const QString &command, bool interactive)
 {
     QMutexLocker locker(&m_mutexInput);
 
@@ -951,7 +963,7 @@ void Interpreter::command(const QString &command)
     else if (words[0]=="close")
         queueCommand(CLOSE);
     else
-        queueCommand(words); // queue the command as-is
+        queueCommand(words, interactive); // queue the command as-is
 end:
     prompt();
 }
@@ -983,16 +995,16 @@ void Interpreter::handleHelp(const QStringList &argv)
     }
 }
 
-void Interpreter::execute(QString command)
+void Interpreter::execute(QString comm)
 {
     if (m_running==true)
         queueCommand(STOP);
     if (m_localProgramRunning)
         queueCommand(STOP_LOCAL);
 
-    command.remove(QRegExp("^\\s+")); // remove leading whitespace
-    if (command!="")
-        emit consoleCommand(command);
+    comm.remove(QRegExp("^\\s+")); // remove leading whitespace
+    if (comm!="")
+        command(comm, false);
 }
 
 void Interpreter::execute(QStringList commandList)
@@ -1004,7 +1016,7 @@ void Interpreter::execute(QStringList commandList)
     if (m_running==true)
         queueCommand(STOP);
     for (i=0; i<commandList.size(); i++)
-        command(commandList[i]);
+        command(commandList[i], false);
 }
 
 void Interpreter::setView(uint index)
@@ -1073,6 +1085,12 @@ int Interpreter::call(const QStringList &argv, bool interactive)
     if (argv.size()<1)
         goto end;
 
+    if (argv[0]=="help")
+    {
+        handleHelp(argv);
+        return 0;
+    }
+
     // check modules to see if they handle this command, if so, skip to end
     emit enableConsole(false);
     for (i=0; i<m_modules.size(); i++)
@@ -1140,7 +1158,7 @@ int Interpreter::call(const QStringList &argv, bool interactive)
                     cargv << m_command.split(QRegExp("\\s+"));
                 }
                 // call ourselves again, now that we have all the args
-                res = call(cargv, true);
+                res = call(cargv);
                 goto end;
             }
             else
@@ -1347,11 +1365,7 @@ void Interpreter::handleLoadParams(bool contextual)
     // (ie it would proceed with 1 property to returned frame, which could take 1 second or 2)
     running = m_running;
     if (running!=2) // only if we're running and not in forced state (running==2)
-    {
         sendStop();
-        while(m_running) // poll for stop
-            getRunning();
-    }
     // reset, we're going to reload with fresh data
     m_pixyParameters.clear();
 
@@ -1510,11 +1524,7 @@ void Interpreter::handleSaveParams(bool reject)
     // (ie it would proceed with 1 property to returned frame, which could take 1 second or 2)
     running = m_running;
     if (!reject && running==1) // only if we're running and not in forced state (running==2)
-    {
         sendStop();
-        while(m_running) // poll for stop
-            getRunning();
-    }
 
     // notify monmodules
     sendMonModulesParamChange();
