@@ -2,6 +2,7 @@
 
 %include "stdint.i"
 %include "carrays.i"
+%include "typemaps.i"
 
 %{
 #define SWIG_FILE_WITH_INIT
@@ -62,6 +63,19 @@ extern int line_get_vectors (int max_vectors, VectorArray *  vectors);
   @return      Number of barcode objects copied to 'barcodes'.
 */
 extern int line_get_barcodes (int  max_barcodes, BarcodeArray *  barcodes);
+%}
+
+%apply uint8_t *OUTPUT { uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue};
+%inline %{
+/*!
+  @brief       Get pixel color components at the (X, Y) position on Pixy's sensor.
+  @param[in]   X      X position of color pixel to get.
+  @param[in]   Y      Y position of color pixel to get.
+  @param[out]  Red    Memory address to write the Red color component value to.
+  @param[out]  Green  Memory address to write the Green color component value to.
+  @param[out]  Blue   Memory address to write the Blue color component value to.
+*/
+extern void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue);
 %}
 
 struct Block

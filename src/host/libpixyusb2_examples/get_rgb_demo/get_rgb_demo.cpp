@@ -78,5 +78,5 @@ int main()
     printf("r:%hhu g:%hhu b:%hhu\n", r, g, b);
   }
 
-  printf ("PIXY2 Get Blocks Demo Exit\n");
+  printf ("PIXY2 Get RGB Demo Exit\n");
 }
