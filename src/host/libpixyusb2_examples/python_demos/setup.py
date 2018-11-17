@@ -18,8 +18,7 @@ pixy_module = Extension('_pixy',
   '../../../host/libpixyusb2/src/libpixyusb2.cpp'])
 
 import os
-print "dir = "
-print os.path.dirname(os.path.realpath(__file__))
+print("dir = %s" % os.path.dirname(os.path.realpath(__file__)))
 
 setup (name = 'pixy',
   version = '0.1',

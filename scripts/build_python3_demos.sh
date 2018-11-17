@@ -29,7 +29,10 @@ mkdir $TARGET_BUILD_FOLDER/python_demos
 cd ../src/host/libpixyusb2_examples/python_demos
 
 swig -c++ -python pixy.i
-python setup.py build_ext --inplace -D__LINUX__
+python3 setup.py build_ext --inplace -D__LINUX__
+
+# For python3 only, the name of shared lib contains arch name, we need to rename it
+mv _pixy.*.so _pixy.so
 
 if [ -f ../../../../build/python_demos/_pixy.so ]; then
   rm ../../../../build/python_demos/_pixy.so
