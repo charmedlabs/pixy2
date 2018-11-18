@@ -17,6 +17,7 @@
 %array_class(struct Vector, VectorArray);
 %array_class(struct IntersectionLine, IntersectionLineArray);
 %array_class(struct Barcode, BarcodeArray);
+%array_class(uint32_t, Uint32Array)
 
 %inline %{
 extern int init();
@@ -76,6 +77,14 @@ extern int line_get_barcodes (int  max_barcodes, BarcodeArray *  barcodes);
   @param[out]  Blue   Memory address to write the Blue color component value to.
 */
 extern void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue);
+%}
+
+%inline %{
+/*!
+  @brief       Get raw frame from Pixy
+  @param[out]  rgb_frame  Memory address to write the frame to
+*/
+extern void video_get_raw_frame (Uint32Array * rgb_frame);
 %}
 
 struct Block
