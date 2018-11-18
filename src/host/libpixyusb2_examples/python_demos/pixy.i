@@ -3,6 +3,7 @@
 %include "stdint.i"
 %include "carrays.i"
 %include "typemaps.i"
+import "numpy.i"
 
 %{
 #define SWIG_FILE_WITH_INIT
@@ -11,6 +12,10 @@
 #include "Pixy2Line.h"
 #include "Pixy2CCC.h"
 #include "libpixyusb2.h"
+%}
+
+%init %{
+  import_array();
 %}
 
 %array_class(struct Block, BlockArray);
@@ -79,6 +84,7 @@ extern int line_get_barcodes (int  max_barcodes, BarcodeArray *  barcodes);
 extern void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue);
 %}
 
+%apply uint32_t * ARGOUT_ARRAY1 { uint32_t * rgb_frame };
 %inline %{
 /*!
   @brief       Get raw frame from Pixy

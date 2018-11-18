@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from distutils.core import setup, Extension
+import numpy
 
 pixy_module = Extension('_pixy',
   include_dirs = ['/usr/include/libusb-1.0',
