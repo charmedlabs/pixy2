@@ -177,7 +177,7 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *im
         }
       }
       
-      *image = (b<<16) | (g<<8) | r; 
+      *image = r | (g<<8) | (b<<16); 
     }
   }
 }
