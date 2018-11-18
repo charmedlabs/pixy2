@@ -84,13 +84,13 @@ extern int line_get_barcodes (int  max_barcodes, BarcodeArray *  barcodes);
 extern void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue);
 %}
 
-%apply (int * ARGOUT_ARRAY1, int DIM1) {(int * rgb_frame, int size)};
+%apply (uint8_t * ARGOUT_ARRAY1, int DIM1) {(uint8_t * rgb_frame, int size)};
 %inline %{
 /*!
   @brief       Get raw frame from Pixy
   @param[out]  rgb_frame  Memory address to write the frame to
 */
-extern void video_get_raw_frame (int * rgb_frame, int size);
+extern void video_get_raw_frame (uint8_t * rgb_frame, int size);
 %}
 
 struct Block

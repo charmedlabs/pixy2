@@ -4,7 +4,7 @@
 
 Pixy2  pixy_instance;
 
-int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *image);
+int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint8_t *image);
 
 int init()
 {
@@ -21,9 +21,9 @@ void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t * 
   pixy_instance.video.getRGB (X, Y, Red, Green, Blue);
 }
 
-void video_get_raw_frame(int * rgb_frame, int size) {
+void video_get_raw_frame(uint8_t * rgb_frame, int size) {
   uint8_t *bayer_frame;
-  int decoded_rgb_frame[size];
+  uint8_t decoded_rgb_frame[size];
   
   // need to call stop() befroe calling getRawFrame().
   // Note, you can call getRawFrame multiple times after calling stop().
@@ -36,7 +36,7 @@ void video_get_raw_frame(int * rgb_frame, int size) {
   demosaic(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, bayer_frame, decoded_rgb_frame);
 
   for (int index = 0; index < size; index++) {
-    memcpy(&rgb_frame[index], &decoded_rgb_frame[index], sizeof(int));
+    memcpy(&rgb_frame[index], &decoded_rgb_frame[index], sizeof(uint8_t));
   }
 
   // Resume currently running program
@@ -125,7 +125,7 @@ int line_get_barcodes (int  max_barcodes, struct Barcode *  barcodes)
   return number_of_barcodes_copied;
 }
 
-int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *image)
+int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint8_t *image)
 {
   uint32_t x, y, xx, yy, r, g, b;
   uint8_t *pixel0, *pixel;
@@ -138,7 +138,7 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *im
     else if (yy==height-1)
       yy--;
     pixel0 = (uint8_t *)bayerImage + yy*width;
-    for (x=0; x<width; x++, image++)
+    for (x=0; x<width; x++, image+=3)
     {
       xx = x;
       if (xx==0)
@@ -177,7 +177,9 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *im
         }
       }
       
-      *image = r | (g<<8) | (b<<16); 
+      *(image) = r;
+      *(image+1) = g;
+      *(image+2) = b; 
     }
   }
 }
