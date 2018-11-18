@@ -23,8 +23,7 @@ void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t * 
 
 void video_get_raw_frame(int * rgb_frame, int size) {
   uint8_t *bayer_frame;
-  size_t length = PIXY2_RAW_FRAME_WIDTH*PIXY2_RAW_FRAME_HEIGHT * 3;
-  int decoded_rgb_frame[length];
+  int decoded_rgb_frame[size];
   
   // need to call stop() befroe calling getRawFrame().
   // Note, you can call getRawFrame multiple times after calling stop().
@@ -36,7 +35,7 @@ void video_get_raw_frame(int * rgb_frame, int size) {
 
   demosaic(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, bayer_frame, decoded_rgb_frame);
 
-  for (int index = 0; index < length; index++) {
+  for (int index = 0; index < size; index++) {
     memcpy(&rgb_frame[index], &decoded_rgb_frame[index], sizeof(int));
   }
 
@@ -139,7 +138,7 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *im
     else if (yy==height-1)
       yy--;
     pixel0 = (uint8_t *)bayerImage + yy*width;
-    for (x=0; x<width; x++, image += 3)
+    for (x=0; x<width; x++, image++)
     {
       xx = x;
       if (xx==0)
@@ -178,9 +177,7 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *im
         }
       }
       
-      *image = (b<<16);
-      *(image+1) = (g<<8);
-      *(image+2) = r; 
+      *image = (b<<16) | (g<<8) | r; 
     }
   }
 }
