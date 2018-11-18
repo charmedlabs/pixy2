@@ -39,6 +39,9 @@ void video_get_raw_frame(uint32_t * rgb_frame) {
   for (int index = 0; index < length; index++) {
     memcpy(&rgb_frame[index], &decoded_rgb_frame[index], sizeof(uint32_t));
   }
+
+  // Resume currently running program
+  pixy_instance.m_link.resume();
 }
 
 int ccc_get_blocks (int  max_blocks, struct Block *  blocks)
