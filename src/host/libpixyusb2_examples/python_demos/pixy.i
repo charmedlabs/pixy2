@@ -78,6 +78,14 @@ extern int line_get_barcodes (int  max_barcodes, BarcodeArray *  barcodes);
 extern void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue);
 %}
 
+%inline %{
+/*!
+  @brief       Get raw frame from Pixy
+  @param[out]  bayer_frame  Memory address to write the frame to
+*/
+extern void video_get_raw_frame (uint8_t** bayer_frame);
+%}
+
 struct Block
 {
   uint16_t  m_signature;

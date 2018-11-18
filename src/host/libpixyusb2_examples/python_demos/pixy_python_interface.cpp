@@ -18,6 +18,10 @@ void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t * 
   pixy_instance.video.getRGB (X, Y, Red, Green, Blue);
 }
 
+void video_get_raw_frame(uint8_t** bayer_frame) {
+  pixy_instance.m_link.getRawFrame(bayer_frame);
+}
+
 int ccc_get_blocks (int  max_blocks, struct Block *  blocks)
 {
   int  number_of_blocks_copied;
