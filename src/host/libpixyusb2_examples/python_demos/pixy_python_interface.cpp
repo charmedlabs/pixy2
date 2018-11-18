@@ -21,7 +21,7 @@ void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t * 
   pixy_instance.video.getRGB (X, Y, Red, Green, Blue);
 }
 
-void video_get_raw_frame(uint32_t * rgb_frame) {
+void video_get_raw_frame(int * rgb_frame, int size) {
   uint8_t *bayer_frame;
   size_t length = PIXY2_RAW_FRAME_WIDTH*PIXY2_RAW_FRAME_HEIGHT;
   uint32_t decoded_rgb_frame[length];

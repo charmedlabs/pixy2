@@ -2,9 +2,14 @@
 
 from distutils.core import setup, Extension
 import numpy
+try:
+    numpy_include = numpy.get_include()
+except AttributeError:
+    numpy_include = numpy.get_numpy_include()
 
 pixy_module = Extension('_pixy',
-  include_dirs = ['/usr/include/libusb-1.0',
+  include_dirs = [numpy_include,
+  '/usr/include/libusb-1.0',
   '/usr/local/include/libusb-1.0',
   '../../../common/inc',
   '../../../host/libpixyusb2/include/',
