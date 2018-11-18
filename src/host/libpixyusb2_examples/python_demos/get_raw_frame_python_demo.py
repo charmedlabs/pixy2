@@ -7,7 +7,7 @@ frame_width = 316
 frame_height = 208
 frame = Uint32Array(frame_width * frame_height)
 
-pixy.video_get_rgb_frame(frame)
+pixy.video_get_raw_frame(frame)
 
 for x in range(0, frame_width):
     for y in range(0, frame_width):

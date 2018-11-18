@@ -84,7 +84,7 @@ extern void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uin
   @brief       Get raw frame from Pixy
   @param[out]  rgb_frame  Memory address to write the frame to
 */
-extern void video_get_rgb_frame (Uint32Array * rgb_frame);
+extern void video_get_raw_frame (Uint32Array * rgb_frame);
 %}
 
 struct Block
