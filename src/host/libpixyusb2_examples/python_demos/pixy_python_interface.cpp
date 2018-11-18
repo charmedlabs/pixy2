@@ -4,7 +4,7 @@
 
 Pixy2  pixy_instance;
 
-int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint32_t *image);
+int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *image);
 
 int init()
 {
@@ -23,8 +23,8 @@ void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t * 
 
 void video_get_raw_frame(int * rgb_frame, int size) {
   uint8_t *bayer_frame;
-  size_t length = PIXY2_RAW_FRAME_WIDTH*PIXY2_RAW_FRAME_HEIGHT;
-  uint32_t decoded_rgb_frame[length];
+  size_t length = PIXY2_RAW_FRAME_WIDTH*PIXY2_RAW_FRAME_HEIGHT * 3;
+  int decoded_rgb_frame[length];
   
   // need to call stop() befroe calling getRawFrame().
   // Note, you can call getRawFrame multiple times after calling stop().
@@ -37,7 +37,7 @@ void video_get_raw_frame(int * rgb_frame, int size) {
   demosaic(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, bayer_frame, decoded_rgb_frame);
 
   for (int index = 0; index < length; index++) {
-    memcpy(&rgb_frame[index], &decoded_rgb_frame[index], sizeof(uint32_t));
+    memcpy(&rgb_frame[index], &decoded_rgb_frame[index], sizeof(int));
   }
 
   // Resume currently running program
@@ -126,7 +126,7 @@ int line_get_barcodes (int  max_barcodes, struct Barcode *  barcodes)
   return number_of_barcodes_copied;
 }
 
-int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint32_t *image)
+int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, int *image)
 {
   uint32_t x, y, xx, yy, r, g, b;
   uint8_t *pixel0, *pixel;
@@ -139,7 +139,7 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint32_
     else if (yy==height-1)
       yy--;
     pixel0 = (uint8_t *)bayerImage + yy*width;
-    for (x=0; x<width; x++, image++)
+    for (x=0; x<width; x++, image += 3)
     {
       xx = x;
       if (xx==0)
@@ -177,7 +177,10 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint32_
           b = *pixel;
         }
       }
-      *image = (b<<16) | (g<<8) | r; 
+      
+      *image = (b<<16);
+      *(image+1) = (g<<8);
+      *(image+2) = r; 
     }
   }
 }
