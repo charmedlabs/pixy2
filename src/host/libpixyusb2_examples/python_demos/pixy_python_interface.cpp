@@ -24,7 +24,7 @@ void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t * 
 void video_get_rgb_frame(uint32_t * rgb_frame) {
   uint8_t *bayer_frame;
   size_t length = PIXY2_RAW_FRAME_WIDTH*PIXY2_RAW_FRAME_HEIGHT;
-  uint32_t mosaic_frame[length];
+  uint32_t decoded_rgb_frame[length];
   
   // need to call stop() befroe calling getRawFrame().
   // Note, you can call getRawFrame multiple times after calling stop().
@@ -34,10 +34,10 @@ void video_get_rgb_frame(uint32_t * rgb_frame) {
   // grab raw frame, BGGR Bayer format, 1 byte per pixel
   pixy_instance.m_link.getRawFrame(&bayer_frame);
 
-  demosaic(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, bayer_frame, mosaic_frame);
+  demosaic(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, bayer_frame, decoded_rgb_frame);
 
   for (int index = 0; index < length; index++) {
-    memcpy(&rgb_frame[index], &mosaic_frame[index], sizeof(uint32_t));
+    memcpy(&rgb_frame[index], &decoded_rgb_frame[index], sizeof(uint32_t));
   }
 }
 
