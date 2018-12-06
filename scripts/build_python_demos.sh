@@ -15,7 +15,7 @@ function RED_TEXT {
 
 WHITE_TEXT
 echo "########################################################################################"
-echo "# Building Get Blocks Python (SWIG) Demo...                                            #"
+echo "# Building Python (SWIG) Demos...                                                      #"
 echo "########################################################################################"
 NORMAL_TEXT
 
