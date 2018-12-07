@@ -10,99 +10,77 @@ PID_MINIMUM_INTEGRAL      = -2000
 ZUMO_BASE_DEADBAND        =    20
 PIXY_RCS_MAXIMUM_POSITION =  1000
 PIXY_RCS_MINIMUM_POSITION =     0
+PIXY_RCS_CENTER_POSITION  = ((PIXY_RCS_MAXIMUM_POSITION - PIXY_RCS_MINIMUM_POSITION) / 2)
 MINIMUM_BLOCK_AGE_TO_LOCK =    30
 
-# Variables #
-Proportion_Gain           = 0
-Proportion_Value          = 0
-Integral_Gain             = 0
-Integral_Value            = 0
-Derivative_Gain           = 0
-Derivative_Value          = 0
-Previous_Error            = 0
-PID_Command               = 0
-Reset_Flag                = True
-Servo                     = False
-Locked_On_Block           = False
-Locked_Block_Index        = 0
-
 def Reset ():
-  global Proportion_Gain
-  global Proportion_Value
-  global Integral_Gain
-  global Integral_Value
-  global Derivative_Gain
-  global Derivative_Value
-  global Previous_Error
-  global PID_Command
-  global Reset_Flag
-  global Servo
   global Locked_On_Block
   global Locked_Block_Index
-  Proportion_Gain    = 0
-  Proportion_Value   = 0
-  Integral_Gain      = 0
-  Integral_Value     = 0
-  Derivative_Gain    = 0
-  Derivative_Value   = 0
-  Previous_Error     = 0
-  PID_Command        = 0
-  Reset_Flag         = True
-  Servo              = False
   Locked_On_Block    = False
   Locked_Block_Index = 0
 
 def Display_Block (Index, Block):
         print '                   Block[%3d]: I: %3d / S:%2d / X:%3d / Y:%3d / W:%3d / H:%3d / A:%3d' % (Index, Block.m_index, Block.m_signature, Block.m_x, Block.m_y, Block.m_width, Block.m_height, Block.m_age)
 
-def Update_PID (Error):
-  global Proportion_Gain
-  global Proportion_Value
-  global Integral_Gain
-  global Integral_Value
-  global Derivative_Gain
-  global Derivative_Value
-  global Previous_Error
-  global PID_Command
-  PID = 0
+class PID_Controller:
+  Previous_Error  = 0
+  Integral_Value  = 0
 
-  # Update integral component #
-  Integral_Value = Integral_Value + Error
+  def _init_ (self, Proportion_Gain, Integral_Gain, Derivative_Gain, Servo):
+    self.Proportion_Gain = Proportion_Gain
+    self.Integral_Gain   = Integral_Gain
+    self.Derivative_Gain = Derivative_Gain
+    self.Servo           = Servo
+    Reset ()
 
-  # Enforce integral boundries #
-  if Integral_Value > PID_MAXIMUM_INTEGRAL:
-    Integral_Value = PID_MAXIMUM_INTEGRAL
-  if Integral_Value < PID_MINIMUM_INTEGRAL:
-    Integral_Value = PID_MINIMUM_INTEGRAL
+  def Reset ():
+    Previous_Error  = 0x80000000L
+    Integral_Value  = 0
+    if Servo:
+      PID_Command = PIXY_RCS_CENTER_POSITION
+    else:
+      PID_Command = 0
 
-  # Calculate Proportion, Integral, Derivative (PID) term #
-  PID = (Error * Proportion_Gain + ((Integral_Value * Integral_Gain) >> 4) + (Error - Previous_Error) * Derivative_Gain) >> 10;
+  def Update_PID (Error):
+    PID = 0
 
-  if Servo:
+    if Previous_Error !=  0x80000000L:
+      # Update integral component #
+      Integral_Value = Integral_Value + Error
 
-    # Integrate the PID term because the servo is a position device #
-    PID_Command = PID_Command + PID
+      # Enforce integral boundries #
+      if Integral_Value > PID_MAXIMUM_INTEGRAL:
+        Integral_Value = PID_MAXIMUM_INTEGRAL
+      if Integral_Value < PID_MINIMUM_INTEGRAL:
+        Integral_Value = PID_MINIMUM_INTEGRAL
 
-    if PID_Command > PIXY_RCS_MAX_POSITION:
-      PID_Command = PIXY_RCS_MAX_POSITION
-    if PID_Command < PIXY_RCS_MIN_POS:
-      PID_Command = PIXY_RCS_MINIMUM_POSITION
+      # Calculate Proportion, Integral, Derivative (PID) term #
+      PID = (Error * Proportion_Gain + ((Integral_Value * Integral_Gain) >> 4) + (Error - Previous_Error) * Derivative_Gain) >> 10;
 
-  else:
+      if Servo:
+        # Integrate the PID term because the servo is a position device #
+        PID_Command = PID_Command + PID
 
-    # Handle Zumo base deadband #
-    if PID > 0:
-      PID = PID + ZUMO_BASE_DEADBAND
-    if PID < 0:
-      PID = PID - ZUMO_BASE_DEADBAND
+        if PID_Command > PIXY_RCS_MAX_POSITION:
+          PID_Command = PIXY_RCS_MAX_POSITION
+        if PID_Command < PIXY_RCS_MIN_POS:
+          PID_Command = PIXY_RCS_MINIMUM_POSITION
 
-    # Use the PID term directly because the Zumo base is a velocity device #
-    PID_Command = PID
+      else:
+        # Handle Zumo base deadband #
+        if PID > 0:
+          PID = PID + ZUMO_BASE_DEADBAND
+        if PID < 0:
+          PID = PID - ZUMO_BASE_DEADBAND
 
-  Previous_Error = Error
+        # Use the PID term directly because the Zumo base is a velocity device #
+        PID_Command = PID
 
+    Previous_Error = Error
 
 print ("Pixy2 Python SWIG Example -- Get Blocks")
+
+# TODO Init pan / tilt controllers
 
 pixy.init ()
 pixy.change_prog ("color_connected_components");
@@ -126,7 +104,10 @@ while 1:
           print 'Frame %3d: Locked' % (Frame)
           Display_Block (Index, Blocks[Index])
 
-          # TODO Add servo controller commands #
+          Pan_Offset  = (pixy.get_frame_width () / 2) - Blocks[Index].m_x;
+          Tilt_Offset = Blocks[Index].m_y - (pixy.get_frame_height () / 2)
+
+          # TODO Update Pan / Tilt controllers
 
     else:
       print 'Frame %3d:' % (Frame)

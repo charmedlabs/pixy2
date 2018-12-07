@@ -13,6 +13,16 @@ int change_prog (const char *  program_name)
   return pixy_instance.changeProg (program_name);
 }
 
+int get_frame_width ()
+{
+  return pixy_instance.frameWidth;
+}
+
+int get_frame_height ()
+{
+  return pixy_instance.frameHeight;
+}
+
 void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue)
 {
   pixy_instance.video.getRGB (X, Y, Red, Green, Blue);

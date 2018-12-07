@@ -29,6 +29,18 @@ extern int init();
 extern int change_prog (const char *  program_name);
 
 /*!
+  @brief       Gets the Pixy sensor frame width.
+  @return      Returns Pixy sensor width (in number of pixels) that is being sent to the host.
+*/
+extern int get_frame_width ();
+
+/*!
+  @brief       Gets the Pixy sensor frame height.
+  @return      Returns Pixy sensor height (in number of pixels) that is being sent to the host.
+*/
+extern int get_frame_height ();
+
+/*!
   @brief       Copy 'max_blocks' number of blocks to the address 'blocks'.
   @param[in]   max_blocks  Maximum number of blocks that will be copied.
   @param[out]  blocks      Address to copy the blocks data.
