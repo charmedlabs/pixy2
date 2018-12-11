@@ -109,3 +109,8 @@ int line_get_barcodes (int  max_barcodes, struct Barcode *  barcodes)
 
   return number_of_barcodes_copied;
 }
+
+void set_servos (int  S1_Position, int  S2_Position)
+{
+  pixy_instance.setServos (S1_Position, S2_Position);
+}

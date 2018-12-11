@@ -75,6 +75,13 @@ extern int line_get_vectors (int max_vectors, VectorArray *  vectors);
   @return      Number of barcode objects copied to 'barcodes'.
 */
 extern int line_get_barcodes (int  max_barcodes, BarcodeArray *  barcodes);
+
+/*!
+  @brief       Set servo position
+  @param[in]   S1_Position  Servo 1 position
+  @param[in]   S2_Position  Servo 2 position
+*/
+extern void set_servos (int  S1_Position, int  S2_Position);
 %}
 
 %apply uint8_t *OUTPUT { uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue};
