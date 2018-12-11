@@ -2,7 +2,7 @@ import pixy
 from ctypes import *
 from pixy import *
 
-# Pixy2 Python SWIG pan title demo #
+# Pixy2 Python SWIG pan/tilt demo #
 
 # Constants #
 PID_MAXIMUM_INTEGRAL      =  2000
