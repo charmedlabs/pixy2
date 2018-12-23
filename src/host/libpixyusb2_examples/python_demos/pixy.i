@@ -76,6 +76,8 @@ extern int line_get_vectors (int max_vectors, VectorArray *  vectors);
 */
 extern int line_get_barcodes (int  max_barcodes, BarcodeArray *  barcodes);
 
+extern void set_lamp (int upper, int lower);
+
 /*!
   @brief       Set servo position
   @param[in]   S1_Position  Servo 1 position
