@@ -3708,7 +3708,6 @@ int line_legoLineData(uint8_t *buf, uint32_t buflen)
 	uint16_t maxy;
 	Line2 *primary;
 	uint32_t x;
-	static int8_t intersectionPresent = -1;
 	static uint8_t lastData[4];
 
 	// override these because LEGO mode doesn't support 
@@ -3754,37 +3753,17 @@ int line_legoLineData(uint8_t *buf, uint32_t buflen)
 	}
 	buf[1] = codeVal;
 	
+	
+	primary = findLine(g_primaryLineIndex);
+	if (primary)
+	{			
+		if (primary->m_i1)
+			buf[2] = primary->m_i1->m_object.m_n;
+		else if (primary->m_i0)
+			buf[2] = primary->m_i0->m_object.m_n;
+	}
 	if (g_newIntersection)
-	{
-		primary = findTrackedLine(g_primaryLineIndex);
-		if (primary)
-		{			
-			if (g_goalPoint.equals(primary->m_p0))
-				intersectionPresent = 0;
-			else
-				intersectionPresent = 1;
-		}
 		g_newIntersection = false;
-	}
-	if (intersectionPresent>=0)
-	{
-		primary = findTrackedLine(g_primaryLineIndex);
-		if (primary)
-		{
-			if (intersectionPresent==0)
-			{
-				if (primary->m_i1)
-					buf[2] = primary->m_i1->m_object.m_n;
-			}
-			else
-			{
-				if (primary->m_i0)
-					buf[2] = primary->m_i0->m_object.m_n;
-			}
-		}
-		if (buf[2]==(uint8_t)-1)
-			intersectionPresent = -1;
-	}
 	
 	memcpy(lastData, buf, 4);
 #endif
