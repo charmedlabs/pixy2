@@ -294,6 +294,27 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 			return 3;
 		}
 	}
+	else if (c==0x62)
+	{
+		if (serial->receive((uint8_t *)&lamp, 1)==1 && 
+			error==false)
+			{
+				if (exec_getProg(ccc)==true)
+					led_setLamp(lamp ? 0xff : 0, 0);
+				else if (lamp)
+				{
+					cc_setLEDOverride(true);
+					led_setLamp(0xff, 0xff);
+				}
+				else
+				{
+					cc_setLEDOverride(false);
+					led_setLamp(0, 0);
+				}					
+			}
+		buf[0] = 1;	
+		return 1;
+	}
 	else  
 	{
 #if 0
