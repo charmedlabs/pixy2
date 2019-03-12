@@ -119,3 +119,8 @@ void set_servos (int  S1_Position, int  S2_Position)
 {
   pixy_instance.setServos (S1_Position, S2_Position);
 }
+
+void set_lamp (int  Upper, int  Lower)
+{
+  pixy_instance.setLamp (Upper, Lower);
+}
