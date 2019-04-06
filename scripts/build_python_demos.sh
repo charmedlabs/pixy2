@@ -29,7 +29,7 @@ mkdir $TARGET_BUILD_FOLDER/python_demos
 cd ../src/host/libpixyusb2_examples/python_demos
 
 swig -c++ -python pixy.i
-python setup.py build_ext --inplace -D__LINUX__
+python swig.dat build_ext --inplace -D__LINUX__
 
 if [ -f ../../../../build/python_demos/_pixy.so ]; then
   rm ../../../../build/python_demos/_pixy.so
