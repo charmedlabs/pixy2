@@ -31,13 +31,15 @@ cd ../src/host/libpixyusb2_examples/python_demos
 swig -c++ -python pixy.i
 python swig.dat build_ext --inplace -D__LINUX__
 
-if [ -f ../../../../build/python_demos/_pixy.so ]; then
-  rm ../../../../build/python_demos/_pixy.so
+files=(../../../../build/python_demos/*.so)
+if (( ${#files[@]} )); then
+  rm ../../../../build/python_demos/*.so
 fi
 
 cp * ../../../../build/python_demos
 
-if [ -f ../../../../build/python_demos/_pixy.so ]; then
+files=(../../../../build/python_demos/*.so)
+if (( ${#files[@]} )); then
   GREEN_TEXT
   printf "SUCCESS "
 else

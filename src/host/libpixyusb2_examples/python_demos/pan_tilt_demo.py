@@ -1,3 +1,4 @@
+from __future__ import print_function
 import pixy
 from ctypes import *
 from pixy import *
@@ -22,7 +23,7 @@ def Reset ():
   Locked_Block_Index = 0
 
 def Display_Block (Index, Block):
-        print '                   Block[%3d]: I: %3d / S:%2d / X:%3d / Y:%3d / W:%3d / H:%3d / A:%3d' % (Index, Block.m_index, Block.m_signature, Block.m_x, Block.m_y, Block.m_width, Block.m_height, Block.m_age)
+        print('                   Block[%3d]: I: %3d / S:%2d / X:%3d / Y:%3d / W:%3d / H:%3d / A:%3d' % (Index, Block.m_index, Block.m_signature, Block.m_x, Block.m_y, Block.m_width, Block.m_height, Block.m_age))
 
 class PID_Controller:
   def __init__ (self, Proportion_Gain, Integral_Gain, Derivative_Gain, Servo):
@@ -33,7 +34,7 @@ class PID_Controller:
     self.Reset ()
 
   def Reset (self):
-    self.Previous_Error  = 0x80000000L
+    self.Previous_Error  = 0x80000000
     self.Integral_Value  = 0
     if self.Servo:
       self.Command = PIXY_RCS_CENTER_POSITION
@@ -43,7 +44,7 @@ class PID_Controller:
   def Update (self, Error):
     PID = 0
 
-    if self.Previous_Error !=  0x80000000L:
+    if self.Previous_Error !=  0x80000000:
       # Update integral component #
       self.Integral_Value = self.Integral_Value + Error
 
@@ -54,7 +55,7 @@ class PID_Controller:
         self.Integral_Value = PID_MINIMUM_INTEGRAL
 
       # Calculate Proportion, Integral, Derivative (PID) term #
-      PID = (Error * self.Proportion_Gain + ((self.Integral_Value * self.Integral_Gain) >> 4) + (Error - self.Previous_Error) * self.Derivative_Gain) >> 10;
+      PID = int(Error * self.Proportion_Gain + (int(self.Integral_Value * self.Integral_Gain) >> 4) + (Error - self.Previous_Error) * self.Derivative_Gain) >> 10;
 
       if self.Servo:
         # Integrate the PID term because the servo is a position device #
@@ -77,7 +78,7 @@ class PID_Controller:
 
     self.Previous_Error = Error
 
-print ("Pixy2 Python SWIG Example -- Pan/Tilt Tracking Demo")
+print("Pixy2 Python SWIG Example -- Pan/Tilt Tracking Demo")
 
 # Initialize pan/tilt controllers #
 Pan_PID_Controller  = PID_Controller (PAN_GAIN, 0, PAN_GAIN, True)
@@ -102,7 +103,7 @@ while 1:
       # Find the block that we are locked to #
       for Index in range (0, Count):
         if Blocks[Index].m_index == Locked_Block_Index:
-          print 'Frame %3d: Locked' % (Frame)
+          print('Frame %3d: Locked' % (Frame))
           Display_Block (Index, Blocks[Index])
 
           Pan_Offset  = (pixy.get_frame_width () / 2) - Blocks[Index].m_x;
@@ -111,9 +112,9 @@ while 1:
           Pan_PID_Controller.Update (Pan_Offset)
           Tilt_PID_Controller.Update (Tilt_Offset)
 
-          pixy.set_servos (Pan_PID_Controller.Command, Tilt_PID_Controller.Command)
+          pixy.set_servos (int(Pan_PID_Controller.Command), int(Tilt_PID_Controller.Command))
     else:
-      print 'Frame %3d:' % (Frame)
+      print('Frame %3d:' % (Frame))
 
       # Display all the blocks in the frame #
       for Index in range (0, Count):

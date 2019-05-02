@@ -197,12 +197,12 @@ void LineModule::handleLISS(uint8_t renderMode, uint8_t index, uint16_t x0, uint
 
     Qt::PenStyle style;
 
-    if (renderMode==0)
-        style = Qt::SolidLine;
-    else if (renderMode==1)
+    if (renderMode==1)
         style = Qt::DashLine;
     else if (renderMode==2)
         style = Qt::DotLine;
+    else // if (renderMode==0)
+        style = Qt::SolidLine;
     Renderer::drawLine(&m_painter, m_colors[index*(LINE_NUM_COLORS/2-1)%LINE_NUM_COLORS], x0*m_scale+0.5, y0*m_scale+0.5, x1*m_scale+0.5, y1*m_scale+0.5, 3, style);
 }
 
