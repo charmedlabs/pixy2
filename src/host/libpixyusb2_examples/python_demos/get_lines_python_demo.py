@@ -27,17 +27,22 @@ class IntersectionLine (Structure):
 
 vectors = VectorArray(100)
 intersections = IntersectionLineArray(100)
+barcodes = BarcodeArray(100)
 frame = 0
 
+
 while 1:
-  line_get_all_features ()
+  #line_get_all_features ()
+  line_get_main_features ()
   i_count = line_get_intersections (100, intersections)
   v_count = line_get_vectors (100, vectors)
-
-  if i_count > 0 or v_count > 0:
+  b_count = line_get_barcodes(100, barcodes)
+  if i_count > 0 or v_count > 0 or b_count > 0:
     print('frame %3d:' % (frame))
     frame = frame + 1
     for index in range (0, i_count):
       print('[INTERSECTION: INDEX=%d ANGLE=%d]' % (intersections[index].m_index, intersections[index].m_angle))
     for index in range (0, v_count):
       print('[VECTOR: INDEX=%d X0=%3d Y0=%3d X1=%3d Y1=%3d]' % (vectors[index].m_index, vectors[index].m_x0, vectors[index].m_y0, vectors[index].m_x1, vectors[index].m_y1))
+    for index in range (0, b_count):
+      print('[BARCODE: X=%3d Y=%3d CODE=%3d]' % (barcodes[index].m_x, barcodes[index].m_y, barcodes[index].m_code))

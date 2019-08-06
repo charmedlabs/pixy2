@@ -127,3 +127,11 @@ struct IntersectionLine
   uint8_t  m_reserved;
   int16_t  m_angle;
 };
+
+struct Barcode
+{
+  uint8_t m_x;
+  uint8_t m_y;
+  uint8_t m_flags;
+  uint8_t m_code;  
+};
