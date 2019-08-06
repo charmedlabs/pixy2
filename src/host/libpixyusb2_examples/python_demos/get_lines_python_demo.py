@@ -5,6 +5,8 @@ from pixy import *
 
 # pixy2 Python SWIG get line features example #
 
+get_all_features = True
+
 print("Pixy2 Python SWIG Example -- Get Line Features")
 
 pixy.init ()
@@ -32,8 +34,10 @@ frame = 0
 
 
 while 1:
-  #line_get_all_features ()
-  line_get_main_features ()
+  if get_all_features:
+    line_get_all_features ()
+  else:
+    line_get_main_features ()
   i_count = line_get_intersections (100, intersections)
   v_count = line_get_vectors (100, vectors)
   b_count = line_get_barcodes(100, barcodes)
