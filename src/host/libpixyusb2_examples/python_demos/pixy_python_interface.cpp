@@ -76,7 +76,7 @@ int line_get_vectors (int  max_vectors, struct Vector *  vectors)
   return number_of_vectors_copied;
 }
 
-int line_get_intersections (int  max_intersections, struct IntersectionLine *  intersections)
+int line_get_intersections (int  max_intersections, struct Intersection *  intersections)
 {
   int  number_of_intersections_copied;
   int  intersections_available;

@@ -1,5 +1,6 @@
 %module pixy
 
+
 %include "stdint.i"
 %include "carrays.i"
 %include "typemaps.i"
@@ -15,11 +16,15 @@
 
 %array_class(struct Block, BlockArray);
 %array_class(struct Vector, VectorArray);
-%array_class(struct IntersectionLine, IntersectionLineArray);
+%array_class(struct Intersection, IntersectionArray);
 %array_class(struct Barcode, BarcodeArray);
+
+
 
 %inline %{
 extern int init();
+
+
 
 /*!
   @brief       Select active running program on Pixy
@@ -58,7 +63,7 @@ extern void line_get_main_features ();
   @param[out]  intersections      Address to copy the intersection data.
   @return      Number of intersections copied to 'intersections'.
 */
-extern int line_get_intersections (int  max_intersections, IntersectionLineArray *  intersections);
+extern int line_get_intersections (int  max_intersections, IntersectionArray *  intersections);
 
 /*!
   @brief       Copy 'max_vectors' number of vectors to the address 'vectors'.
@@ -128,6 +133,16 @@ struct IntersectionLine
   int16_t  m_angle;
 };
 
+struct Intersection
+{
+  uint8_t m_x;
+  uint8_t m_y;
+  
+  uint8_t m_n;
+  uint8_t m_reserved;
+  IntersectionLine m_intLines[6];
+};
+
 struct Barcode
 {
   uint8_t m_x;
@@ -135,3 +150,15 @@ struct Barcode
   uint8_t m_flags;
   uint8_t m_code;  
 };
+
+%extend Intersection {
+  uint8_t getLineIndex(int i) {
+        return $self->m_intLines[i].m_index;
+    }
+}
+
+%extend Intersection {
+  int16_t getLineAngle(int i) {
+        return $self->m_intLines[i].m_angle;
+    }
+}
