@@ -70,6 +70,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	static uint8_t lastLamp = 0;
 	uint8_t c, reverse, lamp;
 	uint16_t d, x, y;
+	bool sat;
 	int8_t turn;
 	int16_t turn16;
 	uint16_t numBlobs;
@@ -276,12 +277,13 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	}
 	else if (c==0x5e) // get RGB
 	{
-		if (serial->receive(buf, 2)==2 && 
+		if (serial->receive(buf, 3)==3 && 
 			error==false)
 		{
-			x = buf[0]*CAM_RES2_WIDTH/255;
-			y = buf[1]*CAM_RES2_HEIGHT/255;
-			temp = getRGB(x, y, true);
+			x = buf[0]*(CAM_RES2_WIDTH-1)/255;
+			y = buf[1]*(CAM_RES2_HEIGHT-1)/255;
+			sat = buf[2];
+			temp = getRGB(x, y, sat);
 			rgbUnpack(temp, &r, &g, &b);
 			buf[0] = r;
 			buf[1] = g;
