@@ -39,10 +39,10 @@
 #define CAM_RES2_WIDTH          316
 #define CAM_RES2_HEIGHT         98
 #define CAM_RES3_WIDTH          (CAM_RES2_WIDTH+320)
-#define CAM_RES3_HEIGHT         49
-#define CAM_PIXEL_SKIP 			    8 
-#define CAM_LINE_SKIP 			    12
-#define CAM_PREBUF_LEN			    64
+#define CAM_RES3_HEIGHT         (CAM_RES2_WIDTH/2)
+#define CAM_PIXEL_SKIP 			8 
+#define CAM_LINE_SKIP 			12
+#define CAM_PREBUF_LEN			64
 #define CAM_FRAME_HEADER_LEN    36
 
 #define CAM_GRAB_M0R0           (CAM_RES0<<4 | CAM_MODE0)
