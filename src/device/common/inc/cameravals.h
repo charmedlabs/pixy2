@@ -37,10 +37,9 @@
 #define CAM_RES1_WIDTH          640
 #define CAM_RES1_HEIGHT         400
 #define CAM_RES2_WIDTH          316
-#define CAM_RES2_HEIGHT         208
+#define CAM_RES2_HEIGHT         98
 #define CAM_RES3_WIDTH          (CAM_RES2_WIDTH+320)
-#define CAM_RES3_HEIGHT         (CAM_RES2_HEIGHT/2)
-
+#define CAM_RES3_HEIGHT         49
 #define CAM_PIXEL_SKIP 			    8 
 #define CAM_LINE_SKIP 			    12
 #define CAM_PREBUF_LEN			    64

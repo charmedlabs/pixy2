@@ -355,6 +355,8 @@ _ASM_FUNC void	lineM0R3(uint32_t *gpio, uint16_t width, uint8_t *memy, uint8_t *
 	// r3: memc
 	// r4: scratch
 	// r5: scratch
+	_ASM(NOP)
+	_ASM(NOP)
 	
 	_ASM(PUSH	{r0-r3}) // save args
 	_ASM(BL.W	callSync) // get pixel sync

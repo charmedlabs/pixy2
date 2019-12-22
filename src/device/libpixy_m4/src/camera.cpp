@@ -1871,7 +1871,7 @@ int32_t cam_setFramerate(const uint8_t &framerate)
 
 int32_t cam_setResolution(const uint16_t &xoffset, const uint16_t &yoffset, const uint16_t &width, const uint16_t &height)
 {
-#if 1
+#if 0
 	uint16_t xoffset2 = (xoffset&~0x03)*2;
 	uint16_t yoffset2 = 0; //yoffset*2 + CAM_LINE_SKIP;
 	uint16_t width2 = (width + CAM_PIXEL_SKIP)*2;
@@ -1928,39 +1928,42 @@ int32_t cam_setResolution(const uint16_t &xoffset, const uint16_t &yoffset, cons
 	g_sccb->Write16(0xC920, width2/5-1);		//cam_stat_ae_initial_window_xend = width/5 - 1
 	g_sccb->Write16(0xC922, height2/5-1);		//cam_stat_ae_initial_window_yend = height/5  - 1
 #else
-	  g_sccb->Write16(0xC800, 0x00f0);// CAM_SENSOR_CFG_Y_ADDR_START - [0:00:07.530]
-	  g_sccb->Write16(0xC802, 0x0140);// CAM_SENSOR_CFG_X_ADDR_START - [0:00:07.535]
-	  g_sccb->Write16(0xC804, 0x02dd);// CAM_SENSOR_CFG_Y_ADDR_END - [0:00:07.540]
-	  g_sccb->Write16(0xC806, 0x03cd);// CAM_SENSOR_CFG_X_ADDR_END - [0:00:07.545]
+	uint16_t width2 = 640;
+	uint16_t height2 = 200;
+	
+	g_sccb->Write16(0xC800, 0x00f0);		//cam_sensor_cfg_y_addr_start = yoffset
+	g_sccb->Write16(0xC802, 0x0000);		//cam_sensor_cfg_x_addr_start = xoffset
+	g_sccb->Write16(0xC804, 493+height2);	//cam_sensor_cfg_y_addr_end = 493+height
+	g_sccb->Write16(0xC806, 653+width2);		//cam_sensor_cfg_x_addr_end = 653+width
 	  g_sccb->Write32(0xC808, 0x0206CC80);// CAM_SENSOR_CFG_PIXCLK - [0:00:07.550]
 	  g_sccb->Write16(0xC80C, 0x0001);// CAM_SENSOR_CFG_ROW_SPEED - [0:00:07.555]
 	  g_sccb->Write16(0xC80E, 0x01C3);// CAM_SENSOR_CFG_FINE_INTEG_TIME_MIN - [0:00:07.560]
-	  g_sccb->Write16(0xC810, 0x0273);// CAM_SENSOR_CFG_FINE_INTEG_TIME_MAX - [0:00:07.565]
-	  g_sccb->Write16(0xC812, 0x011e);// CAM_SENSOR_CFG_FRAME_LENGTH_LINES - [0:00:07.570]
-	  g_sccb->Write16(0xC814, 0x035e);// CAM_SENSOR_CFG_LINE_LENGTH_PCK - [0:00:07.575]
+	g_sccb->Write16(0xC810, 307+width2);		//cam_sensor_cfg_fine_integ_time_max = 307+width
+	g_sccb->Write16(0xC812, 46+height2);		//cam_sensor_cfg_frame_length_lines = 46+height
+	g_sccb->Write16(0xC814, 542+width2);		//cam_sensor_cfg_line_length_pck = 542+width
 	  g_sccb->Write16(0xC816, 0x00E0);// CAM_SENSOR_CFG_FINE_CORRECTION - [0:00:07.580]
-	  g_sccb->Write16(0xC818, 0x00f3);// CAM_SENSOR_CFG_CPIPE_LAST_ROW - [0:00:07.585]
+	g_sccb->Write16(0xC818, 3+height2);		//cam_sensor_cfg_cpipe_last_row = 3+height
 	  g_sccb->Write16(0xC826, 0x0020);// CAM_SENSOR_CFG_REG_0_DATA - [0:00:07.590]
 	  g_sccb->Write16(0xC834, 0x0330);// CAM_SENSOR_CONTROL_READ_MODE - [0:00:07.595]
 	  g_sccb->Write16(0xC854, 0x0000);// CAM_CROP_WINDOW_XOFFSET - [0:00:07.600]
 	  g_sccb->Write16(0xC856, 0x0000);// CAM_CROP_WINDOW_YOFFSET - [0:00:07.605]
-	  g_sccb->Write16(0xC858, 0x0140);// CAM_CROP_WINDOW_WIDTH - [0:00:07.610]
-	  g_sccb->Write16(0xC85A, 0x00f0);// CAM_CROP_WINDOW_HEIGHT - [0:00:07.615]
+	g_sccb->Write16(0xC858, width2);		//cam_crop_window_width = width
+	g_sccb->Write16(0xC85A, height2);		//cam_crop_window_height = height
 	  g_sccb->Write8(0xC85C, 0x03);// CAM_CROP_CROPMODE - [0:00:07.620]
-	  g_sccb->Write16(0xC868, 0x0140);// CAM_OUTPUT_WIDTH - [0:00:07.625]
-	  g_sccb->Write16(0xC86A, 0x00f0);// CAM_OUTPUT_HEIGHT - [0:00:07.630]
+	g_sccb->Write16(0xC868, width2);		//cam_output_width = width
+	g_sccb->Write16(0xC86A, height2);		//cam_output_height = height
 	  g_sccb->Write16(0xC86C, 0x0E10);// cam_output_format Processed Bayer
 	  g_sccb->Write8(0xC878, 0x00);// CAM_AET_AEMODE - [0:00:07.635]
 	  g_sccb->Write16(0xC88C, 0x44f5);// CAM_AET_MAX_FRAME_RATE - [0:00:07.640]
 	  g_sccb->Write16(0xC88E, 0x44f5);// CAM_AET_MIN_FRAME_RATE - [0:00:07.645]
 	  g_sccb->Write16(0xC914, 0x0000);// CAM_STAT_AWB_CLIP_WINDOW_XSTART - [0:00:07.650]
 	  g_sccb->Write16(0xC916, 0x0000);// CAM_STAT_AWB_CLIP_WINDOW_YSTART - [0:00:07.655]
-	  g_sccb->Write16(0xC918, 0x013f);// CAM_STAT_AWB_CLIP_WINDOW_XEND - [0:00:07.660]
-	  g_sccb->Write16(0xC91A, 0x00ef);// CAM_STAT_AWB_CLIP_WINDOW_YEND - [0:00:07.665]
+	g_sccb->Write16(0xC918, width2-1);		//cam_stat_awb_clip_window_xend = width-1
+	g_sccb->Write16(0xC91A, height2-1);		//cam_stat_awb_clip_window_yend = height-1
 	  g_sccb->Write16(0xC91C, 0x0000);// CAM_STAT_AE_INITIAL_WINDOW_XSTART - [0:00:07.670]
 	  g_sccb->Write16(0xC91E, 0x0000);// CAM_STAT_AE_INITIAL_WINDOW_YSTART - [0:00:07.675]
-	  g_sccb->Write16(0xC920, 0x003f);// CAM_STAT_AE_INITIAL_WINDOW_XEND - [0:00:07.680]
-	  g_sccb->Write16(0xC922, 0x002f);// CAM_STAT_AE_INITIAL_WINDOW_YEND - [0:00:07.685]
+	g_sccb->Write16(0xC920, width2/5-1);		//cam_stat_ae_initial_window_xend = width/5 - 1
+	g_sccb->Write16(0xC922, height2/5-1);		//cam_stat_ae_initial_window_yend = height/5  - 1
 
 #endif
 	cam_sendCommand();
