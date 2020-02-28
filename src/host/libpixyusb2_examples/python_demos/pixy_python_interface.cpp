@@ -13,6 +13,16 @@ int change_prog (const char *  program_name)
   return pixy_instance.changeProg (program_name);
 }
 
+int get_frame_width ()
+{
+  return pixy_instance.frameWidth;
+}
+
+int get_frame_height ()
+{
+  return pixy_instance.frameHeight;
+}
+
 void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue)
 {
   pixy_instance.video.getRGB (X, Y, Red, Green, Blue);
@@ -66,7 +76,7 @@ int line_get_vectors (int  max_vectors, struct Vector *  vectors)
   return number_of_vectors_copied;
 }
 
-int line_get_intersections (int  max_intersections, struct IntersectionLine *  intersections)
+int line_get_intersections (int  max_intersections, struct Intersection *  intersections)
 {
   int  number_of_intersections_copied;
   int  intersections_available;
@@ -98,4 +108,14 @@ int line_get_barcodes (int  max_barcodes, struct Barcode *  barcodes)
   }
 
   return number_of_barcodes_copied;
+}
+
+void set_lamp (int upper, int lower)
+{
+  pixy_instance.setLamp (upper, lower);
+}
+
+void set_servos (int  S1_Position, int  S2_Position)
+{
+  pixy_instance.setServos (S1_Position, S2_Position);
 }

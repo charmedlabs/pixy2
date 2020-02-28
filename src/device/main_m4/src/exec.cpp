@@ -610,7 +610,6 @@ void exec_select()
 
 static void loadParams()
 {
-#ifndef LEGO
 	int i;
 	char buf[256], buf2[64];
 
@@ -626,7 +625,6 @@ static void loadParams()
 	prm_add("Default program", 0, PRM_PRIORITY_4-10, buf, UINT8(0), END);
 	prm_add("Program select on power-up", PRM_FLAG_CHECKBOX, PRM_PRIORITY_4-10,
 		"@c Expert Allows you to choose program other than default program upon power-up by button press sequence (default disabled)" , UINT8(0), END);
-#endif
 	prm_add("Debug", 0, PRM_PRIORITY_4-11, 
 		"@c Expert Sets the debug level for the firmware. (default 0)", UINT8(0), END);
 	
@@ -667,13 +665,8 @@ void exec_mainLoop()
 	g_state = 0;
 #endif
 
-#ifdef LEGO
-	exec_runProg(0);
-#else
-
 #ifndef FOO
 	exec_select();
-#endif
 #endif
 
 	// enable USB *after* we've initialized chirp, all modules and selected the program

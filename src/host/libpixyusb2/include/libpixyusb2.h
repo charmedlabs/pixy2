@@ -22,7 +22,7 @@
 #define RBUF_LEN      0x200
 
 #include <string.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include "usblink.h"
 #include "util.h"

@@ -15,7 +15,7 @@ function RED_TEXT {
 
 WHITE_TEXT
 echo "########################################################################################"
-echo "# Building Get Blocks Python (SWIG) Demo...                                            #"
+echo "# Building Python (SWIG) Demos...                                                      #"
 echo "########################################################################################"
 NORMAL_TEXT
 
@@ -29,15 +29,17 @@ mkdir $TARGET_BUILD_FOLDER/python_demos
 cd ../src/host/libpixyusb2_examples/python_demos
 
 swig -c++ -python pixy.i
-python setup.py build_ext --inplace -D__LINUX__
+python swig.dat build_ext --inplace -D__LINUX__
 
-if [ -f ../../../../build/python_demos/_pixy.so ]; then
-  rm ../../../../build/python_demos/_pixy.so
+files=(../../../../build/python_demos/*.so)
+if (( ${#files[@]} )); then
+  rm ../../../../build/python_demos/*.so
 fi
 
 cp * ../../../../build/python_demos
 
-if [ -f ../../../../build/python_demos/_pixy.so ]; then
+files=(../../../../build/python_demos/*.so)
+if (( ${#files[@]} )); then
   GREEN_TEXT
   printf "SUCCESS "
 else

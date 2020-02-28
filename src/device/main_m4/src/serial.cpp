@@ -70,7 +70,9 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	static uint8_t lastLamp = 0;
 	uint8_t c, reverse, lamp;
 	uint16_t d, x, y;
-	int16_t turn;
+	bool sat;
+	int8_t turn;
+	int16_t turn16;
 	uint16_t numBlobs;
 	uint32_t temp, width, height, r, g, b;
 	Iserial *serial = ser_getSerial();
@@ -145,12 +147,14 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 			width = max->m_right - max->m_left;
 			height = max->m_bottom - max->m_top;
 			*(uint16_t *)buf = max->m_model; // signature
-			temp = ((max->m_left + width/2)*819)>>10;
+			temp = ((max->m_left + width/2)*829)>>10;
 			buf[2] = temp; // x
-			buf[3] = max->m_top + height/2; // y
-			temp = (width*819)>>10;
+			temp = ((max->m_top + height/2)*1262)>>10;
+			buf[3] = temp; // y
+			temp = (width*829)>>10;
 			buf[4] = temp; // width
-			buf[5] = height; // height
+			temp = (height*1262)>>10;
+			buf[5] = temp; // height
 			if (max->m_model>CL_NUM_SIGNATURES)
 			{
 				temp = ((int32_t)max->m_angle*91)>>7;
@@ -185,12 +189,14 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 			width = max->m_right - max->m_left;
 			height = max->m_bottom - max->m_top;
 			buf[0] = numBlobs; // number of blocks that match signature
-			temp = ((max->m_left + width/2)*819)>>10;
+			temp = ((max->m_left + width/2)*829)>>10;
 			buf[1] = temp; // x
-			buf[2] = max->m_top + height/2;	// y
-			temp = (width*819)>>10;
+			temp = ((max->m_top + height/2)*1262)>>10;
+			buf[2] = temp;	// y
+			temp = (width*829)>>10;
 			buf[3] = temp; // width
-			buf[4] = height; // height
+			temp = (height*1262)>>10;
+			buf[4] = temp; // height
 		}
 #endif
 		return 5;
@@ -218,12 +224,14 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 			width = max->m_right - max->m_left;
 			height = max->m_bottom - max->m_top;
 			buf[0] = numBlobs; // number of cc blocks that match 
-			temp = ((max->m_left + width/2)*819)>>10;
+			temp = ((max->m_left + width/2)*829)>>10;
 			buf[1] = temp; // x
-			buf[2] = max->m_top + height/2; // y
-			temp = (width*819)>>10;
+			temp = ((max->m_top + height/2)*1262)>>10;
+			buf[2] = temp; // y
+			temp = (width*829)>>10;
 			buf[3] = temp; // width
-			buf[4] = height; // height
+			temp = (height*1262)>>10;
+			buf[4] = temp; // height
 			temp = ((int32_t)max->m_angle*91)>>7;
 			buf[5] = temp; // angle
 		}
@@ -232,12 +240,15 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	}
 	else if (c==0x5a)
 	{
-		if (serial->receive((uint8_t *)&turn, 2)==2 && 
+		if (serial->receive((uint8_t *)&turn, 1)==1 && 
 			serial->receive((uint8_t *)&reverse, 1)==1 &&
 			serial->receive((uint8_t *)&lamp, 1)==1 &&
 			error==false)
 		{
-			line_setNextTurnAngle(turn);
+			turn16 = turn;
+			turn16 *= 180; // scale accordingly
+			turn16 /= 127;
+			line_setNextTurnAngle(turn16);
 			if (lastReverse!=0xffff && lastReverse!=reverse)
 				line_reversePrimary();
 			if (lastLamp!=lamp)
@@ -266,12 +277,13 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 	}
 	else if (c==0x5e) // get RGB
 	{
-		if (serial->receive(buf, 2)==2 && 
+		if (serial->receive(buf, 3)==3 && 
 			error==false)
 		{
-			x = buf[0]*CAM_RES2_WIDTH/255;
-			y = buf[1]*CAM_RES2_HEIGHT/255;
-			temp = getRGB(x, y, true);
+			x = buf[0]*(CAM_RES2_WIDTH-1)/255;
+			y = buf[1]*(CAM_RES2_HEIGHT-1)/255;
+			sat = buf[2];
+			temp = getRGB(x, y, sat);
 			rgbUnpack(temp, &r, &g, &b);
 			buf[0] = r;
 			buf[1] = g;
@@ -283,6 +295,27 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 			memset(buf, -1, 3);
 			return 3;
 		}
+	}
+	else if (c==0x62)
+	{
+		if (serial->receive((uint8_t *)&lamp, 1)==1 && 
+			error==false)
+			{
+				if (exec_getProg(ccc)==true)
+					led_setLamp(lamp ? 0xff : 0, 0);
+				else if (lamp)
+				{
+					cc_setLEDOverride(true);
+					led_setLamp(0xff, 0xff);
+				}
+				else
+				{
+					cc_setLEDOverride(false);
+					led_setLamp(0, 0);
+				}					
+			}
+		buf[0] = 1;	
+		return 1;
 	}
 	else  
 	{
@@ -302,7 +335,7 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 			else
 			{
 				width = max->m_right - max->m_left;
-				temp = ((max->m_left + width/2)*819)>>10;
+				temp = ((max->m_left + width/2)*829)>>10;
 				buf[0] = temp;
 			}
 		}
@@ -629,8 +662,7 @@ void ser_loadParams()
 {
 #ifndef LEGO
 	prm_add("Data out port", 0, PRM_PRIORITY_1, 
-		//"Selects the port that's used to output data (default Arduino ICSP SPI) @c Interface @s 0=Arduino_ICSP_SPI @s 1=SPI_with_SS @s 2=I2C @s 3=UART @s 4=analog/digital_x @s 5=analog/digital_y @s 6=LEGO_I2C", UINT8(0), END);
-		"Selects the port that's used to output data (default Arduino ICSP SPI) @c Interface @s 0=Arduino_ICSP_SPI @s 1=SPI_with_SS @s 2=I2C @s 3=UART @s 4=analog/digital_x @s 5=analog/digital_y", UINT8(0), END);
+		"Selects the port that's used to output data (default Arduino ICSP SPI) @c Interface @s 0=Arduino_ICSP_SPI @s 1=SPI_with_SS @s 2=I2C @s 3=UART @s 4=analog/digital_x @s 5=analog/digital_y @s 6=LEGO_I2C", UINT8(0), END);
 	prm_add("I2C address", PRM_FLAG_HEX_FORMAT, PRM_PRIORITY_1-1, 
 		"@c Interface Sets the I2C address if you are using I2C data out port. (default 0x54)", UINT8(I2C_DEFAULT_SLAVE_ADDR), END);
 	prm_add("UART baudrate", 0, PRM_PRIORITY_1-2, 

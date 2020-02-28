@@ -102,11 +102,7 @@
 #define FLTS64(len, a)                  CRP_FLTS64, len, a
 
 #ifndef END
-#ifdef __x86_64__
-#define END (int64_t)0
-#else
-#define END 0
-#endif
+#define END 0L
 #endif
 #define END_OUT_ARGS END
 #define END_IN_ARGS END

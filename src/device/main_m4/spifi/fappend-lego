@@ -1,0 +1,13 @@
+#/bin/bash
+# This script adds a version header to a Pixy .hex firmware file.  
+sed -b -i 's/^.*:/:/' pixy_firmware.hex
+if [[ $# -eq 9 ]]; then
+	printf "LEGO,%d,%d,%d,%d,%d,%d,%d,%d,%d" $1 $2 $3 $4 $5 $6 $7 $8 $9 | cat - pixy_firmware.hex > pixy_firmware2.hex
+	mv pixy_firmware2.hex pixy2_firmware-$1.$2.$3-LEGO.hex
+elif [[ $# -eq 3 ]]; then
+	printf "LEGO,%d,%d,%d,0,255,0,255,0,255" $1 $2 $3 | cat - pixy_firmware.hex > pixy_firmware2.hex
+	mv pixy_firmware2.hex pixy_firmware-$1.$2.$3-LEGO.hex
+else
+	printf "LEGO,x,x,x,0,255,0,255,0,255" | cat - pixy_firmware.hex > pixy_firmware2.hex
+	mv pixy_firmware2.hex pixy2_firmware-x.x.x-LEGO.hex
+fi
