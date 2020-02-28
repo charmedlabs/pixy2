@@ -24,13 +24,15 @@
 #include "conncomp.h"
 #include "param.h"
 #include "smlink.hpp"
+#include "exec.h"
 
 extern Qqueue *g_qqueue;
 extern Blobs *g_blobs;
 
 
-
+#ifndef LEGO
 REGISTER_PROG(ProgPt, PROG_NAME_PANTILT, "perform pan/tilt tracking", PROG_BLOBS_MIN_TYPE, PROG_BLOBS_MAX_TYPE);
+#endif
 
 ServoLoop ProgPt::m_panLoop(PAN_AXIS);
 ServoLoop ProgPt::m_tiltLoop(TILT_AXIS);

@@ -1,10 +1,11 @@
+from __future__ import print_function
 import pixy 
 from ctypes import *
 from pixy import *
 
 # Pixy2 Python SWIG get blocks example #
 
-print ("Pixy2 Python SWIG Example -- Get Blocks")
+print("Pixy2 Python SWIG Example -- Get Blocks")
 
 pixy.init ()
 pixy.change_prog ("color_connected_components");
@@ -26,7 +27,7 @@ while 1:
   count = pixy.ccc_get_blocks (100, blocks)
 
   if count > 0:
-    print 'frame %3d:' % (frame)
+    print('frame %3d:' % (frame))
     frame = frame + 1
     for index in range (0, count):
-      print '[BLOCK: SIG=%d X=%3d Y=%3d WIDTH=%3d HEIGHT=%3d]' % (blocks[index].m_signature, blocks[index].m_x, blocks[index].m_y, blocks[index].m_width, blocks[index].m_height)
+      print('[BLOCK: SIG=%d X=%3d Y=%3d WIDTH=%3d HEIGHT=%3d]' % (blocks[index].m_signature, blocks[index].m_x, blocks[index].m_y, blocks[index].m_width, blocks[index].m_height))
