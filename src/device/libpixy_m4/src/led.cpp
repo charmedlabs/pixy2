@@ -115,8 +115,8 @@ void led_init()
 void led_setPWM(uint8_t led, uint16_t pwm)
 {
 	uint32_t channel;
-	
-	if (led>LED_BLUE)
+		
+	if ((g_lampState&LED_LAMP_LOWER) || led>LED_BLUE)
 		return;
 
 #if 0
@@ -251,9 +251,14 @@ uint32_t led_getMaxCurrent()
 int32_t led_setLamp(const uint8_t &upper, const uint8_t &lower)
 {
 	uint16_t pwm;
+
+	g_lampState = 0;
 	
 	if (upper)
-		LPC_GPIO_PORT->PIN[1] |= 1<<10;	
+	{
+		LPC_GPIO_PORT->PIN[1] |= 1<<10;
+		g_lampState |= LED_LAMP_UPPER;
+	}
 	else
 		LPC_GPIO_PORT->PIN[1] &= ~(1<<10);
 
@@ -266,7 +271,8 @@ int32_t led_setLamp(const uint8_t &upper, const uint8_t &lower)
 	led_setPWM(LED_GREEN, pwm);		
 	led_setPWM(LED_BLUE, pwm);
 
-	g_lampState = lower | upper;
+	if (lower)
+		g_lampState |= LED_LAMP_LOWER;
 	
 	return 0;
 }
@@ -274,14 +280,8 @@ int32_t led_setLamp(const uint8_t &upper, const uint8_t &lower)
 int led_toggleLamp()
 {
 	if (g_lampState)
-	{
 		led_setLamp(0, 0);
-		g_lampState = 0;
-	}
 	else
-	{
 		led_setLamp(0xff, 0xff);
-		g_lampState = 1;
-	}
-	return g_lampState;
+	return g_lampState!=0;
 }

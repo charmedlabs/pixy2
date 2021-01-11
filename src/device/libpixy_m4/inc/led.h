@@ -43,6 +43,9 @@
 #define ADC_MAX                   0x3ff
 #define ADC_VOLTAGE               3.3f
 
+#define LED_LAMP_UPPER            1
+#define LED_LAMP_LOWER            2
+
 // the 2 values below might be correlated unintentionally
 // The larger the default scale, the more attenuation of the brightness on the low end
 // but note, the range is huge.  For example, there isn't much difference between 20000 and 60000

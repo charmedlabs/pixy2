@@ -22,7 +22,7 @@
 #include <cameravals.h>
 
 
-int cam_init();
+int cam_init(uint16_t *hwVer);
 
 int32_t cam_setMode(const uint8_t &mode);
 uint32_t cam_getMode();

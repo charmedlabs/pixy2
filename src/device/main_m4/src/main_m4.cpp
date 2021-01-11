@@ -68,6 +68,7 @@ unsigned __check_heap_overflow (void * new_end_of_heap)
 int main(void)	 
 {
 	uint16_t major, minor, build;
+	uint16_t hwVer[3];
 	char *type;
 	int i, res, count, count2;
 	volatile uint32_t d;
@@ -81,11 +82,13 @@ int main(void)
 	pixyInit();
 #endif
 
+	exec_getHardwareVersion(hwVer);
+	
 	// main init of hardware plus a version-dependent number for the parameters that will
 	// force a format of parameter between version numbers.  
 
 	exec_init(g_chirpUsb);
-	cam_init();
+	cam_init(hwVer);
 	
 #ifndef LEGO
 	rcs_init();

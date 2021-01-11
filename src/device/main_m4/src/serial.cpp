@@ -254,15 +254,9 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 			if (lastLamp!=lamp)
 			{
 				if (lamp)
-				{
-					cc_setLEDOverride(true);
 					led_setLamp(0xff, 0xff);
-				}
 				else
-				{
-					cc_setLEDOverride(false);
 					led_setLamp(0, 0);
-				}
 			}
 			
 			lastReverse = reverse;
@@ -304,15 +298,9 @@ uint16_t lego_getData(uint8_t *buf, uint32_t buflen)
 				if (exec_getProg(ccc)==true)
 					led_setLamp(lamp ? 0xff : 0, 0);
 				else if (lamp)
-				{
-					cc_setLEDOverride(true);
 					led_setLamp(0xff, 0xff);
-				}
 				else
-				{
-					cc_setLEDOverride(false);
 					led_setLamp(0, 0);
-				}					
 			}
 		buf[0] = 1;	
 		return 1;
@@ -459,9 +447,6 @@ void ser_packet(uint8_t type, const uint8_t *rxData, uint8_t len, bool checksum)
 			ser_sendError(SER_ERROR_INVALID_REQUEST, checksum);
 		else
 		{
-			// set lower LED override if lower lamp is turned on
-			if (rxData[1])
-				cc_setLEDOverride(true);
 			led_setLamp(rxData[0], rxData[1]);
 			ser_sendResult(0, checksum);				
 		}				
