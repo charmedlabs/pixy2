@@ -1,3 +1,6 @@
+build
+.vscode
+
 *.exe
 *.o
 *.d
@@ -8,3 +11,8 @@
 *.jtag
 *.swp
 *.swo
+*.so
+
+pixy.py
+*.pyc
+*.cxx
