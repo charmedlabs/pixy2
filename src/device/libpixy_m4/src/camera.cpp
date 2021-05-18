@@ -1493,7 +1493,7 @@ const CamCommand camInitData[] =
       CAM_REG_WRITE16, 0xC87C, 0x005A, // CAM_AET_BLACK_CLIPPING_TARGET - [0:00:08.898]
       CAM_REG_WRITE8, 0xCC00, 0x08,  // change AE mode, 
       CAM_REG_WRITE16, 0xC984, 0x8000, // CAM_PORT_OUTPUT_CONTROL - [0:00:08.913]
-      CAM_REG_WRITE16, 0x001E, 0x0755, // PAD_SLEW - [0:00:08.916]
+      CAM_REG_WRITE16, 0x001E, 0x0444, // PAD_SLEW - [0:00:08.916]
 
       //CAM_REG_WRITE16, 0xc834, 0x0332, // invert image
 
