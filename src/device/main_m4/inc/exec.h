@@ -21,11 +21,11 @@
 #include "debug_frmwrk.h"
 #include "cameravals.h"
 
-//#define LEGO
+#define LEGO
 
 #define FW_MAJOR_VER		      3
 #define FW_MINOR_VER		      0
-#define FW_BUILD_VER		      17
+#define FW_BUILD_VER		      18
 #ifdef LEGO 
 #define FW_TYPE                   "LEGO"
 #else
