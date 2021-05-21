@@ -21,7 +21,7 @@
 #include "debug_frmwrk.h"
 #include "cameravals.h"
 
-#define LEGO
+//#define LEGO
 
 #define FW_MAJOR_VER		      3
 #define FW_MINOR_VER		      0
