@@ -43,7 +43,12 @@ Pixy2UART pixy;
 Pixy2SPI_SS pixy;
 
 #else
+#ifdef Esp32
 
+#include <Pixy2Esp32.h>
+Pixy2Esp32 pixy;
+
+#else
 #include <Pixy2.h>
 Pixy2 pixy;
 
