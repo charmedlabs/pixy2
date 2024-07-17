@@ -199,7 +199,7 @@ void clockInit(void)
 	/* Run SPIFI from PL160M, /2 */
 	CGU_EntityConnect(CGU_CLKSRC_PLL1, CGU_CLKSRC_IDIVA);
 	CGU_EnableEntity(CGU_CLKSRC_IDIVA, ENABLE);
-	CGU_SetDIV(CGU_CLKSRC_IDIVA, 2);
+	CGU_SetDIV(CGU_CLKSRC_IDIVA, 4);
 	CGU_EntityConnect(CGU_CLKSRC_IDIVA, CGU_BASE_SPIFI);
 	CGU_UpdateClock();
 
