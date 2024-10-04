@@ -14,6 +14,12 @@
 #include "libpixyusb2.h"
 %}
 
+%include "numpy.i"
+
+%init %{
+  import_array();
+%}
+
 %array_class(struct Block, BlockArray);
 %array_class(struct Vector, VectorArray);
 %array_class(struct Intersection, IntersectionArray);
@@ -102,6 +108,15 @@ extern void set_servos (int  S1_Position, int  S2_Position);
   @param[out]  Blue   Memory address to write the Blue color component value to.
 */
 extern void video_get_RGB (int  X, int  Y, uint8_t *  Red, uint8_t *  Green, uint8_t *  Blue);
+%}
+
+%apply (uint8_t * ARGOUT_ARRAY1, int DIM1) {(uint8_t * rgb_frame, int size)};
+%inline %{
+/*!
+  @brief       Get raw frame from Pixy
+  @param[out]  rgb_frame  Memory address to write the frame to
+*/
+extern void video_get_raw_frame (uint8_t * rgb_frame, int size);
 %}
 
 struct Block
